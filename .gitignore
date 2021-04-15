@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Sensitive Configuration
+api/server/conf.json
+
 # Distribution / packaging
 .Python
 build/
@@ -127,3 +130,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+db.conf
+.vscode
