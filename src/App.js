@@ -76,6 +76,11 @@ export default function AutoGrid() {
         </Tabs>
       </AppBar>
       <div className="App-header">
+        <TabPanel value={value} index={0}>
+          <Grid container spacing={2} className={classes.parentPaper}>
+            <Topbar />
+          </Grid>
+        </TabPanel>
         <TabPanel value={value} index={1}>
           <div className={classes.root}>
             <Grid container spacing={2} className={classes.parentPaper}>
