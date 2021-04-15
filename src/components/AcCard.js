@@ -99,18 +99,7 @@ const AcCard = () => {
             onChange={updateTemp}
           />
         ) : (
-          <Slider
-            defaultValue={24}
-            aria-labelledby="discrete-slider-always"
-            step={1}
-            marks={marks}
-            valueLabelDisplay="auto"
-            min={16}
-            max={30}
-            value={fan}
-            onChange={updateTemp}
-            disabled
-          />
+          <Slider defaultValue={24} marks={marks} min={16} max={30} disabled />
         )}
       </Grid>
       <Grid item xs={12}>
@@ -143,37 +132,62 @@ const AcCard = () => {
       <br />
       <Grid item xs={12} container direction="row">
         <Grid item xs={6}>
-          <FormControl className={classes.formControl}>
-            <InputLabel id="demo-simple-select-label">Mode</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={mode}
-              onChange={updateMode}
-            >
-              <MenuItem value={"Auto"}>Auto</MenuItem>
-              <MenuItem value={"Heat"}>Heat</MenuItem>
-              <MenuItem value={"Dry"}>Dry</MenuItem>
-              <MenuItem value={"Cool"}>Cool</MenuItem>
-              <MenuItem value={"Fan"}>Fan</MenuItem>
-            </Select>
-          </FormControl>
+          {ac ? (
+            <FormControl className={classes.formControl}>
+              <InputLabel id="demo-simple-select-label">Mode</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={mode}
+                onChange={updateMode}
+              >
+                <MenuItem value={"Auto"}>Auto</MenuItem>
+                <MenuItem value={"Heat"}>Heat</MenuItem>
+                <MenuItem value={"Dry"}>Dry</MenuItem>
+                <MenuItem value={"Cool"}>Cool</MenuItem>
+                <MenuItem value={"Fan"}>Fan</MenuItem>
+              </Select>
+            </FormControl>
+          ) : (
+            <FormControl className={classes.formControl} disabled>
+              <InputLabel id="demo-simple-select-label">Mode</InputLabel>
+              <Select value={mode}>
+                <MenuItem value={"Auto"}>Auto</MenuItem>
+                <MenuItem value={"Heat"}>Heat</MenuItem>
+                <MenuItem value={"Dry"}>Dry</MenuItem>
+                <MenuItem value={"Cool"}>Cool</MenuItem>
+                <MenuItem value={"Fan"}>Fan</MenuItem>
+              </Select>
+            </FormControl>
+          )}
         </Grid>
         <Grid item xs={6}>
-          <FormControl className={classes.formControl}>
-            <InputLabel id="demo-simple-select-label">Swingmode</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={swing}
-              onChange={updateSwing}
-            >
-              <MenuItem value={"Auto"}>Auto</MenuItem>
-              <MenuItem value={"Up"}>Up</MenuItem>
-              <MenuItem value={"Middle"}>Middle</MenuItem>
-              <MenuItem value={"Down"}>Down</MenuItem>
-            </Select>
-          </FormControl>
+          {ac ? (
+            <FormControl className={classes.formControl}>
+              <InputLabel id="demo-simple-select-label">Swingmode</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={swing}
+                onChange={updateSwing}
+              >
+                <MenuItem value={"Auto"}>Auto</MenuItem>
+                <MenuItem value={"Up"}>Up</MenuItem>
+                <MenuItem value={"Middle"}>Middle</MenuItem>
+                <MenuItem value={"Down"}>Down</MenuItem>
+              </Select>
+            </FormControl>
+          ) : (
+            <FormControl className={classes.formControl} disabled>
+              <InputLabel id="demo-simple-select-label">Swingmode</InputLabel>
+              <Select value={swing}>
+                <MenuItem value={"Auto"}>Auto</MenuItem>
+                <MenuItem value={"Up"}>Up</MenuItem>
+                <MenuItem value={"Middle"}>Middle</MenuItem>
+                <MenuItem value={"Down"}>Down</MenuItem>
+              </Select>
+            </FormControl>
+          )}
         </Grid>
         <Grid item xs={12} className={classes.fab}></Grid>
       </Grid>
