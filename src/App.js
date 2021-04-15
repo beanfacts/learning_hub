@@ -10,6 +10,7 @@ import Tab from "@material-ui/core/Tab";
 import { Topbar } from "./components/Topbar";
 import { LightCard } from "./components/LightCard";
 import { AcCard } from "./components/AcCard";
+import { SchedulerCard } from "./components/SchedulerCard";
 import "./App.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -79,6 +80,10 @@ export default function AutoGrid() {
         <TabPanel value={value} index={0}>
           <Grid container spacing={2} className={classes.parentPaper}>
             <Topbar />
+<<<<<<< HEAD
+=======
+            <SchedulerCard />
+>>>>>>> dev/Lucky
           </Grid>
         </TabPanel>
         <TabPanel value={value} index={1}>
