@@ -80,10 +80,7 @@ export default function AutoGrid() {
         <TabPanel value={value} index={0}>
           <Grid container spacing={2} className={classes.parentPaper}>
             <Topbar />
-<<<<<<< HEAD
-=======
             <SchedulerCard />
->>>>>>> dev/Lucky
           </Grid>
         </TabPanel>
         <TabPanel value={value} index={1}>

@@ -1,10 +1,10 @@
 import * as React from "react";
 import Paper from "@material-ui/core/Paper";
-import FormGroup from "@material-ui/core/FormGroup";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Typography from "@material-ui/core/FormControl";
-import { makeStyles } from "@material-ui/core/styles";
+// import FormGroup from "@material-ui/core/FormGroup";
+// import Checkbox from "@material-ui/core/Checkbox";
+// import FormControlLabel from "@material-ui/core/FormControlLabel";
+// import Typography from "@material-ui/core/FormControl";
+// import { makeStyles } from "@material-ui/core/styles";
 import {
   ViewState,
   EditingState,
@@ -303,56 +303,56 @@ const appointments = [
   },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    margin: theme.spacing(2),
-    padding: theme.spacing(2),
-  },
-  text: theme.typography.h6,
-  formControlLabel: {
-    ...theme.typography.caption,
-    fontSize: "1rem",
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   container: {
+//     margin: theme.spacing(2),
+//     padding: theme.spacing(2),
+//   },
+//   text: theme.typography.h6,
+//   formControlLabel: {
+//     ...theme.typography.caption,
+//     fontSize: "1rem",
+//   },
+// }));
 
 const currentDate = "2018-06-27";
-const editingOptionsList = [
-  { id: "allowAdding", text: "Adding" },
-  { id: "allowDeleting", text: "Deleting" },
-  { id: "allowUpdating", text: "Updating" },
-  { id: "allowResizing", text: "Resizing" },
-  { id: "allowDragging", text: "Dragging" },
-];
+// const editingOptionsList = [
+//   { id: "allowAdding", text: "Adding" },
+//   { id: "allowDeleting", text: "Deleting" },
+//   { id: "allowUpdating", text: "Updating" },
+//   { id: "allowResizing", text: "Resizing" },
+//   { id: "allowDragging", text: "Dragging" },
+// ];
 
-const EditingOptionsSelector = ({ options, onOptionsChange }) => {
-  const classes = useStyles();
-  return (
-    <div className={classes.container}>
-      <Typography className={classes.text}>Enabled Options</Typography>
-      <FormGroup row>
-        {editingOptionsList.map(({ id, text }) => (
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={options[id]}
-                onChange={onOptionsChange}
-                value={id}
-                color="primary"
-              />
-            }
-            classes={{ label: classes.formControlLabel }}
-            label={text}
-            key={id}
-            disabled={
-              (id === "allowDragging" || id === "allowResizing") &&
-              !options.allowUpdating
-            }
-          />
-        ))}
-      </FormGroup>
-    </div>
-  );
-};
+// const EditingOptionsSelector = ({ options, onOptionsChange }) => {
+//   const classes = useStyles();
+//   return (
+//     <div className={classes.container}>
+//       <Typography className={classes.text}>Enabled Options</Typography>
+//       <FormGroup row>
+//         {editingOptionsList.map(({ id, text }) => (
+//           <FormControlLabel
+//             control={
+//               <Checkbox
+//                 checked={options[id]}
+//                 onChange={onOptionsChange}
+//                 value={id}
+//                 color="primary"
+//               />
+//             }
+//             // classes={{ label: classes.formControlLabel }}
+//             // label={text}
+//             // key={id}
+//             // disabled={
+//             //   (id === "allowDragging" || id === "allowResizing") &&
+//             //   !options.allowUpdating
+//             // }
+//           />
+//         ))}
+//       </FormGroup>
+//     </div>
+//   );
+// };
 
 const SchedulerCard = () => {
   const [data, setData] = React.useState(appointments);
@@ -450,10 +450,10 @@ const SchedulerCard = () => {
 
   return (
     <React.Fragment>
-      <EditingOptionsSelector
+      {/* <EditingOptionsSelector
         options={editingOptions}
         onOptionsChange={handleEditingOptionsChange}
-      />
+      /> */}
       <Paper>
         <Scheduler data={data} height={600}>
           <ViewState currentDate={currentDate} />
