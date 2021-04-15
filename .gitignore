@@ -237,7 +237,7 @@ github_hooks_secret.txt
 
 # TernJS port file
 .tern-port
-
+.lock
 .exe
 run/
 .DS_Store
