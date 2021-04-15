@@ -9,14 +9,12 @@
 const char* ssid = "";
 const char* password = "";
 
-const uint16_t IrPin = 4; // ESP32 GPIO pin to use. Recommended: (D4).
+const uint16_t IrPin = 4; 
 int temp = 25;
-IRsend irsend(IrPin);  // Set the GPIO to be used to sending the message.
+IRsend irsend(IrPin); 
 IRGreeAC irgree(IrPin, YAW1F, false, true);
 
 
-// Add your MQTT Broker IP address, example:
-//const char* mqtt_server = "192.168.1.144";
 const char* mqtt_server = "mqtt.bordery.net";
 
 WiFiClient espClient;
@@ -25,12 +23,7 @@ long lastMsg = 0;
 char msg[50];
 int value = 0;
 
-//uncomment the following lines if you're using SPI
-/*#include <SPI.h>
-#define BME_SCK 18
-#define BME_MISO 19
-#define BME_MOSI 23
-#define BME_CS 5*/
+
 
 
 
