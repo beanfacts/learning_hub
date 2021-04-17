@@ -4,15 +4,15 @@ import Clock from "./Clock";
 
 const useStyles = makeStyles((theme) => ({
   left: {
-    textAlign: "-moz-left",
+    textAlign: "left",
     color: "rgba(0, 0, 0, 0.3)",
   },
   center: {
-    textAlign: "-moz-center",
+    textAlign: "center",
     color: "rgba(0, 0, 0, 0.3)",
   },
   right: {
-    textAlign: "-moz-right",
+    textAlign: "right",
     padding: theme.spacing(2),
     color: "rgba(0, 0, 0, 0.3)",
   },
