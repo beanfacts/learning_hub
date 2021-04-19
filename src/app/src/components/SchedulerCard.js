@@ -340,15 +340,6 @@ const currentDate = "2018-06-27";
 //                 color="primary"
 //               />
 //             }
-<<<<<<< HEAD:src/components/SchedulerCard.js
-//             // classes={{ label: classes.formControlLabel }}
-//             // label={text}
-//             // key={id}
-//             // disabled={
-//             //   (id === "allowDragging" || id === "allowResizing") &&
-//             //   !options.allowUpdating
-//             // }
-=======
 //             classes={{ label: classes.formControlLabel }}
 //             label={text}
 //             key={id}
@@ -356,7 +347,6 @@ const currentDate = "2018-06-27";
 //               (id === "allowDragging" || id === "allowResizing") &&
 //               !options.allowUpdating
 //             }
->>>>>>> dev/Lucky:src/app/src/components/SchedulerCard.js
 //           />
 //         ))}
 //       </FormGroup>
