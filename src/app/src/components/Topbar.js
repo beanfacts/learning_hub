@@ -129,10 +129,10 @@ const Topbar = () => {
             <Clock />
           </h1>
         </Grid>
-        <Grid item xs={4} className={classes.resultAlign}>
-          <h4 className={classes.resultAlign0}>{building} {room}</h4>
+        <Grid item xs={1} className={classes.resultAlign}>
+          <p className={classes.resultAlign0}>{building} {room}</p>
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={10}>
           <div align='right'>
             <StyledButton onClick={handleClickOpen}>Select Building & Room</StyledButton>
             <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
