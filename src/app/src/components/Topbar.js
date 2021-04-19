@@ -67,9 +67,27 @@ const Topbar = () => {
   const [building, setBuilding] = React.useState([]);
   const [room, setRoom] = React.useState([]);
   const [open, setOpen] = React.useState(false);
-  const [age, setAge] = React.useState('');
   const classes = useStyles();
+
+  const buildingOptions = ["HM", "ECC", "E12"];
+  const hmRoom = [505,604,706];
+  const e12Room = [1,2,3];
+  const eccRoom = [608,708];
   
+  let type = null;
+  let options = null;
+
+  if (building === "HM"){
+    type = hmRoom;
+  }else if(building === "E12"){
+    type = e12Room;
+  }else if(building === "ECC"){
+    type = eccRoom;
+  }
+
+  if(type){
+    options = type.map((el)=><MenuItem value={el}>{el}</MenuItem>);
+  }
 
   const updateBuilding = (event) => {
     setBuilding(event.target.value);
@@ -78,10 +96,6 @@ const Topbar = () => {
   const updateRoom = (event) => {
     setRoom(event.target.value);
   }
-
-  const handleChange = (event) => {
-    setAge(Number(event.target.value) || '');
-  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -111,8 +125,7 @@ const Topbar = () => {
         </Grid>
         <Grid item xs={8}>
           <div align='right'>
-            <StyledButton onClick={handleClickOpen}>Schedule</StyledButton>
-            {/* <Button onClick={handleClickOpen} className={classes.textFieldStyle}>Click to schedule</Button> */}
+            <StyledButton onClick={handleClickOpen}>Select Building & Room</StyledButton>
             <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
               <DialogTitle>Select Building and Room to schedule</DialogTitle>
               <DialogContent>
@@ -126,28 +139,39 @@ const Topbar = () => {
                       input={<Input id="building-select" />}
                     >
                       <option aria-label="None" value="" />
-                      <option value={10}>HM</option>
-                      <option value={20}>ECC</option>
-                      <option value={30}>E12</option>
+                      <option value={'HM'}>HM</option>
+                      <option value={'ECC'}>ECC</option>
+                      <option value={'E12'}>E12</option>
                     </Select>
                   </FormControl>
-                  <FormControl className={classes.formControl}>
-                    <InputLabel id="room-select">Room</InputLabel>
-                    <Select
-                      labelId="room-select"
-                      id="demo-dialog-select"
-                      value={room}
-                      onChange={updateRoom}
-                      input={<Input />}
-                    >
-                      <MenuItem value="">
+                  <div>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel id="room-select">Room</InputLabel>
+                      <Select
+                        labelId="room-select"
+                        id="room-select"
+                        value={room}
+                        onChange={updateRoom}
+                        input={<Input />}
+                      >
+                        <MenuItem value="">
                         <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={10}>HM-505</MenuItem>
-                      <MenuItem value={20}>HM-604</MenuItem>
-                      <MenuItem value={30}>HM-706</MenuItem>
-                    </Select>
-                  </FormControl>
+                        </MenuItem>
+                        {
+                          options
+                        }
+                        {/* <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={505}>HM-505</MenuItem>
+                        <MenuItem value={604}>HM-604</MenuItem>
+                        <MenuItem value={706}>HM-706</MenuItem> */}
+                      
+                      </Select>
+                      {building}
+                      {room}
+                    </FormControl>
+                    </div>
                 </form>
               </DialogContent>
               <DialogActions>
