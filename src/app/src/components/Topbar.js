@@ -5,7 +5,7 @@ import axios from "../axios";
 import React, { useEffect, useState } from "react";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
+// import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
@@ -61,15 +61,21 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
   },
+  resultAlign: {
+    align: "left",
+    fontSize: 20,
+    fontWeight: "bold",
+    padding: theme.spacing(2),
+    color: "rgba(0, 0, 0, 0.3)",
+  }
 }));
 
 const Topbar = () => {
-  const [building, setBuilding] = React.useState([]);
-  const [room, setRoom] = React.useState([]);
-  const [open, setOpen] = React.useState(false);
+  const [building, setBuilding] = useState([]);
+  const [room, setRoom] = useState([]);
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
 
-  const buildingOptions = ["HM", "ECC", "E12"];
   const hmRoom = [505,604,706];
   const e12Room = [1,2,3];
   const eccRoom = [608,708];
@@ -118,12 +124,15 @@ const Topbar = () => {
   return (
     <Grid item xs={12}>
       <Grid item xs container>
-        <Grid item xs={4}>
+        <Grid item xs={1}>
           <h1 className={classes.left}>
             <Clock />
           </h1>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={4} className={classes.resultAlign}>
+          <h4 className={classes.resultAlign0}>{building} {room}</h4>
+        </Grid>
+        <Grid item xs={7}>
           <div align='right'>
             <StyledButton onClick={handleClickOpen}>Select Building & Room</StyledButton>
             <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
@@ -154,19 +163,12 @@ const Topbar = () => {
                         onChange={updateRoom}
                         input={<Input />}
                       >
-                        <MenuItem value="">
+                        {/* <MenuItem value="">
                         <em>None</em>
-                        </MenuItem>
+                        </MenuItem> */}
                         {
                           options
                         }
-                        {/* <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={505}>HM-505</MenuItem>
-                        <MenuItem value={604}>HM-604</MenuItem>
-                        <MenuItem value={706}>HM-706</MenuItem> */}
-                      
                       </Select>
                       {building}
                       {room}
