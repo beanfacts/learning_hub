@@ -340,6 +340,7 @@ const currentDate = "2018-06-27";
 //                 color="primary"
 //               />
 //             }
+<<<<<<< HEAD:src/components/SchedulerCard.js
 //             // classes={{ label: classes.formControlLabel }}
 //             // label={text}
 //             // key={id}
@@ -347,6 +348,15 @@ const currentDate = "2018-06-27";
 //             //   (id === "allowDragging" || id === "allowResizing") &&
 //             //   !options.allowUpdating
 //             // }
+=======
+//             classes={{ label: classes.formControlLabel }}
+//             label={text}
+//             key={id}
+//             disabled={
+//               (id === "allowDragging" || id === "allowResizing") &&
+//               !options.allowUpdating
+//             }
+>>>>>>> dev/Lucky:src/app/src/components/SchedulerCard.js
 //           />
 //         ))}
 //       </FormGroup>
@@ -404,14 +414,14 @@ const SchedulerCard = () => {
     setAddedAppointment(appointment);
     setIsAppointmentBeingCreated(true);
   });
-  const handleEditingOptionsChange = React.useCallback(({ target }) => {
-    const { value } = target;
-    const { [value]: checked } = editingOptions;
-    setEditingOptions({
-      ...editingOptions,
-      [value]: !checked,
-    });
-  });
+  // const handleEditingOptionsChange = React.useCallback(({ target }) => {
+  //   const { value } = target;
+  //   const { [value]: checked } = editingOptions;
+  //   setEditingOptions({
+  //     ...editingOptions,
+  //     [value]: !checked,
+  //   });
+  // });
 
   const TimeTableCell = React.useCallback(
     React.memo(({ onDoubleClick, ...restProps }) => (
@@ -455,7 +465,7 @@ const SchedulerCard = () => {
         onOptionsChange={handleEditingOptionsChange}
       /> */}
       <Paper>
-        <Scheduler data={data} height={600}>
+        <Scheduler data={data} height={800}>
           <ViewState currentDate={currentDate} />
           <EditingState
             onCommitChanges={onCommitChanges}

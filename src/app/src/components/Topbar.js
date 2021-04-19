@@ -1,6 +1,8 @@
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Clock from "./Clock";
+import axios from "../axios";
+import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   left: {
@@ -19,7 +21,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Topbar = () => {
+  const [building, setBuilding] = useState([]);
   const classes = useStyles();
+
+  useEffect(() => {
+    //axios function
+    async function fetchdata() {
+      const request = await axios.get("/api/");
+      console.log(request.data.results);
+      return request;
+    }
+    fetchdata();
+  }, []);
+
   return (
     <Grid item xs={12}>
       <Grid item xs container>
