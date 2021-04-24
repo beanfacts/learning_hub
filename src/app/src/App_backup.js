@@ -72,7 +72,8 @@ export default function AutoGrid() {
           onChange={handleChange}
           aria-label="simple tabs example"
         >
-          <Tab label="Scheduler"/>
+          <Tab label="Scheduler" {...a11yProps(0)} />
+          <Tab label="Controller" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <div className="App-header">
@@ -82,7 +83,43 @@ export default function AutoGrid() {
           <SchedulerCard />
           </Grid>
         </TabPanel>
-        
+        <TabPanel value={value} index={1}>
+          <div className={classes.root}>
+            <Grid container spacing={2} className={classes.parentPaper}>
+              {/* top most line of the app where time is located */}
+              <Topbar />
+              <Grid item xs={12} container direction="row">
+                <Grid spacing={2} item xs container>
+                  {/* video container */}
+                  <Grid item xs={4}>
+                    <Paper className={classes.first}>
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      {videoConnected ? (
+                        <VideoIcon className={classes.icons} />
+                      ) : (
+                        <ErrorIcon className={classes.icons} />
+                      )}
+                    </Paper>
+                  </Grid>
+                  {/* light container */}
+                  <Grid item xs={4} zeroMinWidth>
+                    <LightCard />
+                  </Grid>
+                  {/* ac container */}
+                  <Grid item xs={4} zeroMinWidth>
+                    <AcCard />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
+        </TabPanel>
       </div>
     </>
   );
