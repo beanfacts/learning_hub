@@ -72,7 +72,8 @@ export default function AutoGrid() {
           onChange={handleChange}
           aria-label="simple tabs example"
         >
-          <Tab label="Scheduler"/>
+          <Tab label="Scheduler" {...a11yProps(0)} />
+          <Tab label="Controller" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <div className="App-header">

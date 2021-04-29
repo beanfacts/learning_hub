@@ -58,16 +58,16 @@ const styles = (theme) => ({
 const useStyles = makeStyles((theme) => ({
   left: {
     textAlign: "left",
-    color: "rgba(0, 0, 0, 0.3)",
+    color: "#a3a5a9",
   },
   center: {
     textAlign: "center",
-    color: "rgba(0, 0, 0, 0.3)",
+    color: "#a3a5a9",
   },
   right: {
     textAlign: "right",
     padding: theme.spacing(2),
-    color: "rgba(0, 0, 0, 0.3)",
+    color: "#a3a5a9",
   },
   formControl: {
     margin: theme.spacing(1),
@@ -200,6 +200,7 @@ const Topbar = () => {
   useEffect(() => {
     //axios function
     async function fetchdata() {
+      // TODO change to actual path
       const request = await axios.get("/api/");
       console.log(request.data.results);
       return request;
