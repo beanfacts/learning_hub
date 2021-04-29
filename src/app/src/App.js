@@ -73,17 +73,16 @@ export default function AutoGrid() {
           aria-label="simple tabs example"
         >
           <Tab label="Scheduler" {...a11yProps(0)} />
-          <Tab label="Controller" {...a11yProps(1)} />
+          {/* <Tab label="Controller" {...a11yProps(1)} /> */}
         </Tabs>
       </AppBar>
       <div className="App-header">
         <TabPanel value={value} index={0}>
           <Grid container spacing={2} className={classes.parentPaper}>
-          <Topbar/>
-          <SchedulerCard />
+            <Topbar />
+            <SchedulerCard />
           </Grid>
         </TabPanel>
-        
       </div>
     </>
   );

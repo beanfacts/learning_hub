@@ -161,7 +161,11 @@ def login_system():
 #   GET /rooms                              for all rooms
 @app.route(API_PATH + "/rooms")
 def get_rooms():
-    return jsonify(rooms), 200
+    response = jsonify(rooms)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response, 200
+
+   
 
 # To use:
 #   GET /things?id=thing_id                 for a specific thing, getting its sensor details
@@ -182,7 +186,10 @@ def get_sensors():
         if (room_id is not None and v["room"] != room_id):
             continue
         output[k] = v
-    return jsonify({"result": output}), HTTPStatus.OK
+#    return jsonify({"result": output}), HTTPStatus.OK
+    response = jsonify({"result": output})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response, HTTPStatus.OK
 
 # To use:
 #   POST /control?id=id -> with the body containing the request data
@@ -203,9 +210,16 @@ def sensor_control():
                         things[thing_id]["sensors"][k] = v
                         print(f"Updated {k} -> {v} for sensor {thing_id}")
                     print("error")
-        return "Updated", 200
+        #return "Updated", 200
+        response = "Updated"
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response, 200
+        
     else:
-        return "Bad request type", HTTPStatus.BAD_REQUEST
+        #return "Bad request type", HTTPStatus.BAD_REQUEST
+        response = "Bad request type"
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response, HTTPStatus.BAD_REQUEST
 
 
 if __name__ == '__main__':
