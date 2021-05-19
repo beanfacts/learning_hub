@@ -5,7 +5,6 @@ import axios from "../axios";
 import React, { useEffect, useState } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-// import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
@@ -17,13 +16,12 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import { LightCard } from "./LightCard";
+import { VdoCard } from "./VdoCard";
 import { AcCard } from "./AcCard";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import Paper from "@material-ui/core/Paper";
-import VideoIcon from "@material-ui/icons/OndemandVideoRounded";
-import ErrorIcon from "@material-ui/icons/ErrorOutlineRounded";
 
 const StyledButton = withStyles({
   root: {
@@ -161,9 +159,7 @@ const Topbar = () => {
   const hmVroom = ["HM-505", "HM-604", "HM-706"];
   const e12Room = [1, 2, 3];
   const eccRoom = [608, 708];
-  const videoConnected = true;
 
-  
   let type = null;
   let options = null;
 
@@ -212,7 +208,7 @@ const Topbar = () => {
       // setRoom(request.data.hm_601.name);
       // console.log(request.data)
       console.log(request.data);
-      setHm(request.data)
+      setHm(request.data);
       console.log(hm.hm_602.name);
       return request;
     }
@@ -235,15 +231,14 @@ const Topbar = () => {
 
   let newRoom = null;
   let items = [];
-  for (const [k, v] of Object.entries(hm)){
+  for (const [k, v] of Object.entries(hm)) {
     // console.log(k)
-    items.push(k)
+    items.push(k);
   }
-  newRoom = items.map((value,index)=>{
-    return <MenuItem value={value}>{value}</MenuItem>
-  })
-  console.log({newRoom})
-  
+  newRoom = items.map((value, index) => {
+    return <MenuItem value={value}>{value}</MenuItem>;
+  });
+  console.log({ newRoom });
 
   return (
     <Grid item xs={12}>
@@ -252,7 +247,6 @@ const Topbar = () => {
           <h1 className={classes.left} margin={2}>
             <Clock />
           </h1>
-          
         </Grid>
         <Grid item xs={2} className={classes.resultAlign}>
           {/* <p className={classes.resultAlign0}>{building} {room}</p> */}
@@ -273,8 +267,7 @@ const Topbar = () => {
             </Box> */}
           </div>
         </Grid>
-        
-        
+
         <Grid item xs={8}>
           <div align="right">
             <StyledButton onClick={handleClickOpen}>
@@ -299,13 +292,13 @@ const Topbar = () => {
                     >
                       <option aria-label="None" value="" />
                       {/* <option value={fetchdata()}>HM</option> */}
-                      {/* <option value={"ECC"}>ECC</option>
+                  {/* <option value={"ECC"}>ECC</option>
                       <option value={"E12"}>E12</option> */}
-                      {/* <option onSelect={setRoom(request.data.hm)} */}
-                      {/* {newRoom.map((value, index) => {
+                  {/* <option onSelect={setRoom(request.data.hm)} */}
+                  {/* {newRoom.map((value, index) => {
                         <option value={value}>{index}</option>
                       })} */}
-                    {/* </Select> */}
+                  {/* </Select> */}
                   {/* </FormControl> */}
 
                   {/* Room Select */}
@@ -319,16 +312,16 @@ const Topbar = () => {
                         onChange={updateRoom}
                         input={<Input />}
                       >
-                      {/* <option aria-label="None" value="" />
+                        {/* <option aria-label="None" value="" />
                       <option value={"HM-505"}>HM-505</option>
                       <option value={"HM-604"}>HM-604</option>
                       <option value={"HM-706"}>HM-706</option>
                       <option value={hm.hm_602.name}>{hm.hm_602.name}</option>
                        */}
-                      
-                      {newRoom}
-                      
-                      {/* {options} */}
+
+                        {newRoom}
+
+                        {/* {options} */}
                       </Select>
                       {/* {building} */}
                       {/* {newRoom}
@@ -366,20 +359,7 @@ const Topbar = () => {
                 <Grid item xs={12} container direction="row">
                   {/* <Grid item xs={2}></Grid> */}
                   <Grid item xs={4}>
-                    <Paper className={classes.first}>
-                      <br />
-                      <br />
-                      <br />
-                      <br />
-                      <br />
-                      <br />
-                      <br />
-                      {videoConnected ? (
-                        <VideoIcon className={classes.icons} />
-                      ) : (
-                        <ErrorIcon className={classes.icons} />
-                      )}
-                    </Paper>
+                    <VdoCard />
                   </Grid>
                   <Grid item xs={4}>
                     <LightCard room={room} />

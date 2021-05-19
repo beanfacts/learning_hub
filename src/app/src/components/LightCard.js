@@ -64,12 +64,6 @@ const LightCard = ({ room }) => {
         console.log(error);
       });
   };
-  const [state, setState] = useState({
-    checkedA: false,
-    checkedB: false,
-    checkedC: false,
-    checkedD: false,
-  });
 
   const classes = useStyles();
   return (
