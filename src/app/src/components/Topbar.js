@@ -211,7 +211,7 @@ const Topbar = () => {
       const request = await axios.get("/rooms");
       // setRoom(request.data.hm_601.name);
       // console.log(request.data)
-      console.log(request.data.hm_602.name);
+      console.log(request.data);
       setHm(request.data)
       console.log(hm.hm_602.name);
       return request;
@@ -236,13 +236,13 @@ const Topbar = () => {
   let newRoom = null;
   let items = [];
   for (const [k, v] of Object.entries(hm)){
-    console.log(v["name"])
-    items.push(v["name"])
+    // console.log(k)
+    items.push(k)
   }
   newRoom = items.map((value,index)=>{
     return <MenuItem value={value}>{value}</MenuItem>
   })
-
+  console.log({newRoom})
   
 
   return (
@@ -382,11 +382,11 @@ const Topbar = () => {
                     </Paper>
                   </Grid>
                   <Grid item xs={4}>
-                    <LightCard room="hm_602" />
+                    <LightCard room={room} />
                     {/* TODO change the "hm_602" to dynamic value (the value that you stored) */}
                   </Grid>
                   <Grid item xs={4}>
-                    <AcCard room="hm_602" />
+                    <AcCard room={room} />
                   </Grid>
                   {/* <Grid item xs={2}></Grid> */}
                 </Grid>
