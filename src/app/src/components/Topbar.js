@@ -153,21 +153,22 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 const Topbar = () => {
-  const [building, setBuilding] = useState(["None"]);
+  const [building, setBuilding] = useState("None");
   const [room, setRoom] = useState(["None"]);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const classes = useStyles();
-  const hmRoom = [505, 604, 706];
+  const hmVroom = ["HM-505", "HM-604", "HM-706"];
   const e12Room = [1, 2, 3];
   const eccRoom = [608, 708];
   const videoConnected = true;
 
+  
   let type = null;
   let options = null;
 
-  if (building === "HM") {
-    type = hmRoom;
+  if (building === "HM_601") {
+    type = hmVroom;
   } else if (building === "E12") {
     type = e12Room;
   } else if (building === "ECC") {
@@ -177,6 +178,7 @@ const Topbar = () => {
   if (type) {
     options = type.map((el) => <MenuItem value={el}>{el}</MenuItem>);
   }
+
   const handleClickOpen2 = () => {
     setOpen2(true);
   };
@@ -201,12 +203,17 @@ const Topbar = () => {
     setOpen(false);
   };
 
+  const [hm, setHm] = useState([]);
   useEffect(() => {
     //axios function
     async function fetchdata() {
       // TODO change to actual path
       const request = await axios.get("/rooms");
-      // console.log(request.data.results);
+      // setRoom(request.data.hm_601.name);
+      // console.log(request.data)
+      console.log(request.data);
+      setHm(request.data)
+      console.log(hm.hm_602.name);
       return request;
     }
     fetchdata().then(
@@ -218,6 +225,25 @@ const Topbar = () => {
       }
     );
   }, []);
+  // console.log(request.data)
+
+  // options = type.map((el) => <MenuItem value={el}>{el}</MenuItem>);
+
+  // for (const [index, value] of elements.entries()) {
+  //   items.push(<li key={index}>{value}</li>)
+  // }
+
+  let newRoom = null;
+  let items = [];
+  for (const [k, v] of Object.entries(hm)){
+    // console.log(k)
+    items.push(k)
+  }
+  newRoom = items.map((value,index)=>{
+    return <MenuItem value={value}>{value}</MenuItem>
+  })
+  console.log({newRoom})
+  
 
   return (
     <Grid item xs={12}>
@@ -226,6 +252,7 @@ const Topbar = () => {
           <h1 className={classes.left} margin={2}>
             <Clock />
           </h1>
+          
         </Grid>
         <Grid item xs={2} className={classes.resultAlign}>
           {/* <p className={classes.resultAlign0}>{building} {room}</p> */}
@@ -238,13 +265,16 @@ const Topbar = () => {
               bgcolor="white"
               className={classes.selectedValueDisplay}
             >
-              {building}-{room}
+              {/* {building}-{room} */}
+              {room}
             </Box>
             {/* <Box component="div" display="inline" p={1} m={1} bgcolor="white" className={classes.selectedValueDisplay}>
               {room}
             </Box> */}
           </div>
         </Grid>
+        
+        
         <Grid item xs={8}>
           <div align="right">
             <StyledButton onClick={handleClickOpen}>
@@ -256,10 +286,10 @@ const Topbar = () => {
               open={open}
               onClose={handleClose}
             >
-              <DialogTitle>Select Building and Room to schedule</DialogTitle>
+              <DialogTitle>Select Room to schedule</DialogTitle>
               <DialogContent dividers>
                 <form className={classes.container}>
-                  <FormControl className={classes.formControl}>
+                  {/* <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="building-select">Building</InputLabel>
                     <Select
                       native
@@ -268,11 +298,17 @@ const Topbar = () => {
                       input={<Input id="building-select" />}
                     >
                       <option aria-label="None" value="" />
-                      <option value={"HM"}>HM</option>
-                      <option value={"ECC"}>ECC</option>
-                      <option value={"E12"}>E12</option>
-                    </Select>
-                  </FormControl>
+                      {/* <option value={fetchdata()}>HM</option> */}
+                      {/* <option value={"ECC"}>ECC</option>
+                      <option value={"E12"}>E12</option> */}
+                      {/* <option onSelect={setRoom(request.data.hm)} */}
+                      {/* {newRoom.map((value, index) => {
+                        <option value={value}>{index}</option>
+                      })} */}
+                    {/* </Select> */}
+                  {/* </FormControl> */}
+
+                  {/* Room Select */}
                   <div>
                     <FormControl className={classes.formControl}>
                       <InputLabel id="room-select">Room</InputLabel>
@@ -283,10 +319,20 @@ const Topbar = () => {
                         onChange={updateRoom}
                         input={<Input />}
                       >
-                        {options}
+                      {/* <option aria-label="None" value="" />
+                      <option value={"HM-505"}>HM-505</option>
+                      <option value={"HM-604"}>HM-604</option>
+                      <option value={"HM-706"}>HM-706</option>
+                      <option value={hm.hm_602.name}>{hm.hm_602.name}</option>
+                       */}
+                      
+                      {newRoom}
+                      
+                      {/* {options} */}
                       </Select>
-                      {building}
-                      {room}
+                      {/* {building} */}
+                      {/* {newRoom}
+                      {room} */}
                     </FormControl>
                   </div>
                 </form>
@@ -336,11 +382,11 @@ const Topbar = () => {
                     </Paper>
                   </Grid>
                   <Grid item xs={4}>
-                    <LightCard room="hm_602" />
+                    <LightCard room={room} />
                     {/* TODO change the "hm_602" to dynamic value (the value that you stored) */}
                   </Grid>
                   <Grid item xs={4}>
-                    <AcCard room="hm_602" />
+                    <AcCard room={room} />
                   </Grid>
                   {/* <Grid item xs={2}></Grid> */}
                 </Grid>
