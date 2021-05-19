@@ -4,8 +4,6 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import BulbIcon from "@material-ui/icons/WbIncandescentRounded";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
 import Switch from "@material-ui/core/Switch";
 import axios from "../axios";
 
@@ -47,19 +45,19 @@ const LightCard = ({ room }) => {
   }, []);
 
   const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-    let id = event.target.name;
-    console.log(event.target.name);
-    things[id].sensors.state = !event.target.checked;
+    // setState({ ...state, [event.target.name]: event.target.checked });
     setThings({
       ...things,
-      id: {
-        ...things[id], // Spread the font object to preserve all values
+      [event.target.name]: {
+        ...things[event.target.name], // Spread the font object to preserve all values
         sensors: {
-          state: !event.target.value,
+          state: event.target.checked,
         },
       },
     });
+    let id = event.target.name;
+    console.log(event.target.name);
+    things[id].sensors.state = event.target.checked;
     axios
       .post(`/control?id=${event.target.name}`, things[id].sensors)
       .then(() => (error) => {
@@ -98,20 +96,25 @@ const LightCard = ({ room }) => {
                 )}
               </Grid>
               <Grid item xs={6}>
-                <IconButton
+                <Switch
                   disabled={Object.keys(things).length >= 1 ? false : true}
-                  onClick={handleChange}
-                  aria-label="on off"
-                  name={Object.keys(things)[0]}
+                  checked={
+                    things[Object.keys(things)[0]].sensors.state ? true : false
+                  }
+                  onChange={handleChange}
                   color="primary"
-                >
-                  <DeleteIcon />
-                </IconButton>
+                  name={Object.keys(things)[0]}
+                  inputProps={{
+                    "aria-label": "primary checkbox",
+                  }}
+                />
               </Grid>
               <Grid item xs={6}>
                 <Switch
                   disabled={Object.keys(things).length > 1 ? false : true}
-                  checked={things[Object.keys(things)[1]].sensors.state}
+                  checked={
+                    things[Object.keys(things)[1]].sensors.state ? true : false
+                  }
                   onChange={handleChange}
                   color="primary"
                   name={Object.keys(things)[1]}
@@ -119,73 +122,54 @@ const LightCard = ({ room }) => {
                     "aria-label": "primary checkbox",
                   }}
                 />
-                <IconButton
-                  disabled={Object.keys(things).length > 2 ? false : true}
-                  onChange={handleChange}
-                  aria-label="on off"
-                  name={Object.keys(things)[2]}
-                  color="primary"
-                >
-                  <DeleteIcon />
-                </IconButton>
               </Grid>
             </Grid>
             <Grid item xs container direction="row">
               <Grid item xs={6}>
-                {state.checkedC ? (
+                {things[Object.keys(things)[2]].sensors.state ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
                 )}
               </Grid>
               <Grid item xs={6}>
-                {state.checkedD ? (
+                {Object.keys(things).length > 3 ? (
+                  things[Object.keys(things)[3]].sensors.state
+                ) : false ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
                 )}
               </Grid>
               <Grid item xs={6}>
-                {/* <Switch
+                <Switch
                   disabled={Object.keys(things).length > 2 ? false : true}
-                  checked={things[Object.keys(things)[2]].sensors.state}
+                  checked={
+                    things[Object.keys(things)[2]].sensors.state ? true : false
+                  }
                   onChange={handleChange}
                   color="primary"
                   name={Object.keys(things)[2]}
                   inputProps={{
                     "aria-label": "primary checkbox",
                   }}
-                /> */}
-                <IconButton
-                  disabled={Object.keys(things).length > 2 ? false : true}
-                  onChange={handleChange}
-                  aria-label="on off"
-                  name={Object.keys(things)[2]}
-                  color="primary"
-                >
-                  <DeleteIcon />
-                </IconButton>
+                />
               </Grid>
               <Grid item xs={6}>
                 <Switch
                   disabled={Object.keys(things).length > 3 ? false : true}
-                  // checked={state.checkedD}
-                  onChange={handleChange}
+                  checked={
+                    Object.keys(things).length > 3
+                      ? things[Object.keys(things)[3]].sensors.state
+                      : false
+                  }
+                  onChange={() => handleChange}
                   color="primary"
                   name={Object.keys(things)[3]}
                   inputProps={{
                     "aria-label": "primary checkbox",
                   }}
                 />
-                <IconButton
-                  disabled={Object.keys(things).length > 3 ? false : true}
-                  onChange={handleChange}
-                  aria-label="on off"
-                  name={Object.keys(things)[3]}
-                  color="primary"
-                >
-                  <DeleteIcon />
-                </IconButton>
               </Grid>
             </Grid>
           </Grid>
