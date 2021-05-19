@@ -9,7 +9,8 @@ import Slider from "@material-ui/core/Slider";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import React from "react";
+import axios from "../axios";
+import React, { useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   center: {
@@ -32,11 +33,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AcCard = () => {
+const AcCard = ({ room }) => {
   const classes = useStyles();
-  const [fan, setFan] = React.useState([24]);
-  const [mode, setMode] = React.useState("");
-  const [swing, setSwing] = React.useState("");
+  const [fan, setFan] = useState([24]);
+  const [mode, setMode] = useState("");
+  const [swing, setSwing] = useState("");
   const updateTemp = (e, data) => {
     setFan(data);
   };
@@ -47,7 +48,7 @@ const AcCard = () => {
     setSwing(event.target.value);
   };
 
-  const [ac, setAC] = React.useState(false);
+  const [ac, setAC] = useState(false);
   const handleAC = (event) => {
     setAC((prev) => !prev);
   };
@@ -69,6 +70,27 @@ const AcCard = () => {
       label: "30°C",
     },
   ];
+
+  useEffect(() => {
+    //axios function
+    async function fetchdata() {
+      // TODO change to actual path
+      var path = `/things?room_id=${room}`;
+      const request = await axios.get(path);
+      // console.log(request.data.results);
+      return request;
+    }
+    fetchdata().then(
+      (response) => {
+        console.log(response);
+        console.log(response.data);
+        // console.log(request);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }, [room]);
   return (
     <Paper className={classes.first}>
       <Grid item xs={12}>
