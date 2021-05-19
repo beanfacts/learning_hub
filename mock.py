@@ -6,8 +6,10 @@ from flask import Flask, request, send_file, Response, jsonify
 import logging
 import secrets
 from http import HTTPStatus
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 API_PATH = "/api/v1"
 
 # Learning Hub Mock API - DynamoDB compatible version
@@ -139,6 +141,12 @@ sessions = {
     "c90da1db34f11bb52594a89610cd2ffa": "admin"
 }
 
+def jsonify_cors(body):
+    r = jsonify(body)
+    r.headers.add('Access-Control-Allow-Origin', '*')
+    r.headers.add('Access-Control-Allow-Headers', '*')
+    return r
+
 # Login to the system
 #   POST /login?username=username&password=password
 #   Returns an authentication token
@@ -161,9 +169,9 @@ def login_system():
 #   GET /rooms                              for all rooms
 @app.route(API_PATH + "/rooms")
 def get_rooms():
-    response = jsonify(rooms)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response, 200
+    # response = jsonify_cors(rooms)
+    # response.headers.add('Access-Control-Allow-Origin', '*')
+    return jsonify_cors(rooms), 200
 
    
 
@@ -186,19 +194,20 @@ def get_sensors():
         if (room_id is not None and v["room"] != room_id):
             continue
         output[k] = v
-#    return jsonify({"result": output}), HTTPStatus.OK
-    response = jsonify({"result": output})
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    return response, HTTPStatus.OK
+#    return jsonify_cors({"result": output}), HTTPStatus.OK
+    # response = jsonify_cors({"result": output})
+    # response.headers.add('Access-Control-Allow-Origin', '*')
+    return jsonify_cors({"result": output}), HTTPStatus.OK
 
 # To use:
 #   POST /control?id=id -> with the body containing the request data
 #   For example: {"state": False, "temp": 23.0}, for an air conditioner.
 #   MQTT devices which need updating will be updated automatically.
 #   The state can be confirmed again by querying the /things endpoint.
+# request.content_type == 'application/json' and 
 @app.route(API_PATH + "/control", methods=['POST'])
 def sensor_control():
-    if (request.content_type == 'application/json' and request.method == 'POST'):  
+    if (request.method == 'POST'):  
         for (k, v) in dict(request.json).items():  
             thing_id = request.args.get("id")
             print(f"Thing {thing_id}")
@@ -211,15 +220,15 @@ def sensor_control():
                         print(f"Updated {k} -> {v} for sensor {thing_id}")
                     print("error")
         #return "Updated", 200
-        response = "Updated"
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response, 200
+        # response = "Updated"
+        # response.headers.add('Access-Control-Allow-Origin', '*')
+        return jsonify_cors("Updated"), 200
         
     else:
         #return "Bad request type", HTTPStatus.BAD_REQUEST
-        response = "Bad request type"
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        return response, HTTPStatus.BAD_REQUEST
+        # response = "Bad request type"
+        # response.headers.add('Access-Control-Allow-Origin', '*')
+        return  jsonify_cors("Bad request type"), HTTPStatus.BAD_REQUEST
 
 
 if __name__ == '__main__':

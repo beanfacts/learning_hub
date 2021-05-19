@@ -218,7 +218,7 @@ const Topbar = () => {
     }
     fetchdata().then(
       (response) => {
-        console.log(response);
+        // console.log(response);
       },
       (error) => {
         console.log(error);
@@ -382,10 +382,11 @@ const Topbar = () => {
                     </Paper>
                   </Grid>
                   <Grid item xs={4}>
-                    <LightCard />
+                    <LightCard room="hm_602" />
+                    {/* TODO change the "hm_602" to dynamic value (the value that you stored) */}
                   </Grid>
                   <Grid item xs={4}>
-                    <AcCard />
+                    <AcCard room="hm_602" />
                   </Grid>
                   {/* <Grid item xs={2}></Grid> */}
                 </Grid>
