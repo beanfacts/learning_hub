@@ -76,14 +76,16 @@ const LightCard = ({ room }) => {
           <Grid item xs={12}>
             <Grid item xs container direction="row">
               <Grid item xs={6}>
-                {things[Object.keys(things)[0]].sensors.state ? (
+                {Object.keys(things).length >= 1 &&
+                things[Object.keys(things)[0]].sensors.state ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
                 )}
               </Grid>
               <Grid item xs={6}>
-                {things[Object.keys(things)[1]].sensors.state ? (
+                {Object.keys(things).length > 1 &&
+                things[Object.keys(things)[1]].sensors.state ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
@@ -93,7 +95,9 @@ const LightCard = ({ room }) => {
                 <Switch
                   disabled={Object.keys(things).length >= 1 ? false : true}
                   checked={
-                    things[Object.keys(things)[0]].sensors.state ? true : false
+                    Object.keys(things).length >= 1
+                      ? things[Object.keys(things)[0]].sensors.state
+                      : false
                   }
                   onChange={handleChange}
                   color="primary"
@@ -107,7 +111,9 @@ const LightCard = ({ room }) => {
                 <Switch
                   disabled={Object.keys(things).length > 1 ? false : true}
                   checked={
-                    things[Object.keys(things)[1]].sensors.state ? true : false
+                    Object.keys(things).length > 1
+                      ? things[Object.keys(things)[1]].sensors.state
+                      : false
                   }
                   onChange={handleChange}
                   color="primary"
@@ -120,16 +126,16 @@ const LightCard = ({ room }) => {
             </Grid>
             <Grid item xs container direction="row">
               <Grid item xs={6}>
-                {things[Object.keys(things)[2]].sensors.state ? (
+                {Object.keys(things).length > 2 &&
+                things[Object.keys(things)[2]].sensors.state ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
                 )}
               </Grid>
               <Grid item xs={6}>
-                {Object.keys(things).length > 3 ? (
-                  things[Object.keys(things)[3]].sensors.state
-                ) : false ? (
+                {Object.keys(things).length > 3 &&
+                things[Object.keys(things)[3]].sensors.state ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
@@ -139,7 +145,9 @@ const LightCard = ({ room }) => {
                 <Switch
                   disabled={Object.keys(things).length > 2 ? false : true}
                   checked={
-                    things[Object.keys(things)[2]].sensors.state ? true : false
+                    Object.keys(things).length > 2
+                      ? things[Object.keys(things)[2]].sensors.state
+                      : false
                   }
                   onChange={handleChange}
                   color="primary"
@@ -170,7 +178,7 @@ const LightCard = ({ room }) => {
         </Paper>
       ) : (
         <div className={classes.first}>
-          <CircularProgress></CircularProgress>
+          <CircularProgress />
         </div>
       )}
     </>
