@@ -218,7 +218,8 @@ def sensor_control():
                     if ktype == intype:
                         things[thing_id]["sensors"][k] = v
                         print(f"Updated {k} -> {v} for sensor {thing_id}")
-                    print("error")
+                    else:
+                        print("error")
         #return "Updated", 200
         # response = "Updated"
         # response.headers.add('Access-Control-Allow-Origin', '*')
