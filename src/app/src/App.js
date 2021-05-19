@@ -1,17 +1,17 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import VideoIcon from "@material-ui/icons/OndemandVideoRounded";
-import ErrorIcon from "@material-ui/icons/ErrorOutlineRounded";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { Topbar } from "./components/Topbar";
-import { LightCard } from "./components/LightCard";
-import { AcCard } from "./components/AcCard";
 import { SchedulerCard } from "./components/SchedulerCard";
 import "./App.css";
+// import Paper from "@material-ui/core/Paper";
+// import VideoIcon from "@material-ui/icons/OndemandVideoRounded";
+// import ErrorIcon from "@material-ui/icons/ErrorOutlineRounded";
+// import { LightCard } from "./components/LightCard";
+// import { AcCard } from "./components/AcCard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,17 +73,16 @@ export default function AutoGrid() {
           aria-label="simple tabs example"
         >
           <Tab label="Scheduler" {...a11yProps(0)} />
-          <Tab label="Controller" {...a11yProps(1)} />
+          {/* <Tab label="Controller" {...a11yProps(1)} /> */}
         </Tabs>
       </AppBar>
       <div className="App-header">
         <TabPanel value={value} index={0}>
           <Grid container spacing={2} className={classes.parentPaper}>
-          <Topbar/>
-          <SchedulerCard />
+            <Topbar />
+            <SchedulerCard />
           </Grid>
         </TabPanel>
-        
       </div>
     </>
   );
