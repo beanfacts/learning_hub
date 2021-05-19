@@ -22,6 +22,7 @@ import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import Paper from "@material-ui/core/Paper";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const StyledButton = withStyles({
   root: {
@@ -155,25 +156,8 @@ const Topbar = () => {
   const [room, setRoom] = useState(["None"]);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [loading, setLoading] = useState(false);
   const classes = useStyles();
-  const hmVroom = ["HM-505", "HM-604", "HM-706"];
-  const e12Room = [1, 2, 3];
-  const eccRoom = [608, 708];
-
-  let type = null;
-  let options = null;
-
-  if (building === "HM_601") {
-    type = hmVroom;
-  } else if (building === "E12") {
-    type = e12Room;
-  } else if (building === "ECC") {
-    type = eccRoom;
-  }
-
-  if (type) {
-    options = type.map((el) => <MenuItem value={el}>{el}</MenuItem>);
-  }
 
   const handleClickOpen2 = () => {
     setOpen2(true);
@@ -209,6 +193,7 @@ const Topbar = () => {
       // console.log(request.data)
       console.log(request.data);
       setHm(request.data);
+      setLoading(true);
       console.log(hm.hm_602.name);
       return request;
     }
@@ -221,13 +206,6 @@ const Topbar = () => {
       }
     );
   }, []);
-  // console.log(request.data)
-
-  // options = type.map((el) => <MenuItem value={el}>{el}</MenuItem>);
-
-  // for (const [index, value] of elements.entries()) {
-  //   items.push(<li key={index}>{value}</li>)
-  // }
 
   let newRoom = null;
   let items = [];
@@ -241,146 +219,118 @@ const Topbar = () => {
   console.log({ newRoom });
 
   return (
-    <Grid item xs={12}>
-      <Grid item xs container>
-        <Grid zeroMinWidth={true}>
-          <h1 className={classes.left} margin={2}>
-            <Clock />
-          </h1>
-        </Grid>
-        <Grid item xs={2} className={classes.resultAlign}>
-          {/* <p className={classes.resultAlign0}>{building} {room}</p> */}
-          <div className={classes.selectedValueDisplay}>
-            <Box
-              component="div"
-              display="inline"
-              p={1}
-              m={1}
-              bgcolor="white"
-              className={classes.selectedValueDisplay}
-            >
-              {/* {building}-{room} */}
-              {room}
-            </Box>
-            {/* <Box component="div" display="inline" p={1} m={1} bgcolor="white" className={classes.selectedValueDisplay}>
-              {room}
-            </Box> */}
-          </div>
-        </Grid>
+    <>
+      {loading? (
+        <Grid item xs={12}>
+          <Grid item xs container>
+            <Grid zeroMinWidth={true}>
+              <h1 className={classes.left} margin={2}>
+                <Clock />
+              </h1>
+            </Grid>
+            <Grid item xs={2} className={classes.resultAlign}>
+              <div className={classes.selectedValueDisplay}>
+                <Box
+                  component="div"
+                  display="inline"
+                  p={1}
+                  m={1}
+                  bgcolor="white"
+                  className={classes.selectedValueDisplay}
+                >
+                  {room}
+                </Box>     
+              </div>
+            </Grid>
 
-        <Grid item xs={8}>
-          <div align="right">
-            <StyledButton onClick={handleClickOpen}>
-              Select Building & Room
-            </StyledButton>
-            <Dialog
-              disableBackdropClick
-              disableEscapeKeyDown
-              open={open}
-              onClose={handleClose}
-            >
-              <DialogTitle>Select Room to schedule</DialogTitle>
-              <DialogContent dividers>
-                <form className={classes.container}>
-                  {/* <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="building-select">Building</InputLabel>
-                    <Select
-                      native
-                      value={building}
-                      onChange={updateBuilding}
-                      input={<Input id="building-select" />}
-                    >
-                      <option aria-label="None" value="" />
-                      {/* <option value={fetchdata()}>HM</option> */}
-                  {/* <option value={"ECC"}>ECC</option>
-                      <option value={"E12"}>E12</option> */}
-                  {/* <option onSelect={setRoom(request.data.hm)} */}
-                  {/* {newRoom.map((value, index) => {
-                        <option value={value}>{index}</option>
-                      })} */}
-                  {/* </Select> */}
-                  {/* </FormControl> */}
-
-                  {/* Room Select */}
-                  <div>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel id="room-select">Room</InputLabel>
-                      <Select
-                        labelId="room-select"
-                        id="room-select"
-                        value={room}
-                        onChange={updateRoom}
-                        input={<Input />}
-                      >
-                        {/* <option aria-label="None" value="" />
-                      <option value={"HM-505"}>HM-505</option>
-                      <option value={"HM-604"}>HM-604</option>
-                      <option value={"HM-706"}>HM-706</option>
-                      <option value={hm.hm_602.name}>{hm.hm_602.name}</option>
-                       */}
-
-                        {newRoom}
-
-                        {/* {options} */}
-                      </Select>
-                      {/* {building} */}
-                      {/* {newRoom}
-                      {room} */}
-                    </FormControl>
-                  </div>
-                </form>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                  Cancel
-                </Button>
-                <Button onClick={handleClose} color="primary">
-                  Ok
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </div>
+            <Grid item xs={8}>
+              <div align="right">
+                <StyledButton onClick={handleClickOpen}>
+                  Select Building & Room
+                </StyledButton>
+                <Dialog
+                  disableBackdropClick
+                  disableEscapeKeyDown
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <DialogTitle>Select Room to schedule</DialogTitle>
+                  <DialogContent dividers>
+                    <form className={classes.container}>
+              
+                      <div>
+                        <FormControl className={classes.formControl}>
+                          <InputLabel id="room-select">Room</InputLabel>
+                          <Select
+                            labelId="room-select"
+                            id="room-select"
+                            value={room}
+                            onChange={updateRoom}
+                            input={<Input />}
+                          >
+                            {newRoom}
+                          </Select>
+                        </FormControl>
+                      </div>
+                    </form>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                      Cancel
+                    </Button>
+                    <Button onClick={handleClose} color="primary">
+                      Ok
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+            </Grid>
+            <Grid item xs={1}>
+              <div>
+                <StyledButton onClick={handleClickOpen2}>Controller</StyledButton>
+                <Dialog
+                  onClose={handleClose2}
+                  aria-labelledby="customized-dialog-title"
+                  open={open2}
+                  maxWidth="lg"
+                  fullWidth={true}
+                  onBackdropClick={handleClose2}
+                >
+                  <DialogTitle id="customized-dialog-title" onClose={handleClose2}>
+                    Controller
+                  </DialogTitle>
+                  <DialogContent dividers>
+                    <Grid item xs={12} container direction="row">
+                      {/* <Grid item xs={2}></Grid> */}
+                      <Grid item xs={4}>
+                        <VdoCard />
+                      </Grid>
+                      <Grid item xs={4}>
+                        <LightCard room={room} />
+                        {/* TODO change the "hm_602" to dynamic value (the value that you stored) */}
+                      </Grid>
+                      <Grid item xs={4}>
+                        <AcCard room={room} />
+                      </Grid>
+                      {/* <Grid item xs={2}></Grid> */}
+                    </Grid>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button autoFocus onClick={handleClose2} color="primary">
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs={1}>
-          <div>
-            <StyledButton onClick={handleClickOpen2}>Controller</StyledButton>
-            <Dialog
-              onClose={handleClose2}
-              aria-labelledby="customized-dialog-title"
-              open={open2}
-              maxWidth="lg"
-              fullWidth={true}
-              onBackdropClick={handleClose2}
-            >
-              <DialogTitle id="customized-dialog-title" onClose={handleClose2}>
-                Controller
-              </DialogTitle>
-              <DialogContent dividers>
-                <Grid item xs={12} container direction="row">
-                  {/* <Grid item xs={2}></Grid> */}
-                  <Grid item xs={4}>
-                    <VdoCard />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <LightCard room={room} />
-                    {/* TODO change the "hm_602" to dynamic value (the value that you stored) */}
-                  </Grid>
-                  <Grid item xs={4}>
-                    <AcCard room={room} />
-                  </Grid>
-                  {/* <Grid item xs={2}></Grid> */}
-                </Grid>
-              </DialogContent>
-              <DialogActions>
-                <Button autoFocus onClick={handleClose2} color="primary">
-                  Close
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </div>
-        </Grid>
-      </Grid>
-    </Grid>
+      ): (
+        <div className={classes.first}>
+          <CircularProgress></CircularProgress>
+        </div>
+      )}
+    </>
   );
 };
 
