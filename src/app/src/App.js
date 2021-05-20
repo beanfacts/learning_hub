@@ -6,6 +6,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { Topbar } from "./components/Topbar";
 import { SchedulerCard } from "./components/SchedulerCard";
+// import { Register } from "./components/Register";
 import "./App.css";
 // import Paper from "@material-ui/core/Paper";
 // import VideoIcon from "@material-ui/icons/OndemandVideoRounded";
@@ -59,7 +60,7 @@ function a11yProps(index) {
 
 export default function AutoGrid() {
   const classes = useStyles();
-  const videoConnected = true;
+  // const videoConnected = true;
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -79,6 +80,7 @@ export default function AutoGrid() {
       <div className="App-header">
         <TabPanel value={value} index={0}>
           <Grid container spacing={2} className={classes.parentPaper}>
+            {/* <Register /> */}
             <Topbar />
             <SchedulerCard />
           </Grid>
