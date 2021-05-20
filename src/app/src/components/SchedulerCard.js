@@ -1,5 +1,6 @@
-import * as React from "react";
+import React, { useCallback, useState, memo } from "react";
 import Paper from "@material-ui/core/Paper";
+import moment from "moment";
 
 import {
   ViewState,
@@ -302,22 +303,20 @@ const appointments = [
   },
 ];
 
-const currentDate1 = "2021-04-27";
+const currentDate1 = moment();
 const SchedulerCard = () => {
-  const [data, setData] = React.useState(appointments);
-  const [currentDate, setCurrentDate] = React.useState(currentDate1);
-  const [editingOptions, setEditingOptions] = React.useState({
+  const [data, setData] = useState(appointments);
+  const [currentDate, setCurrentDate] = useState(currentDate1);
+  const [editingOptions, setEditingOptions] = useState({
     allowAdding: true,
     allowDeleting: true,
     allowUpdating: true,
     allowDragging: true,
     allowResizing: true,
   });
-  const [addedAppointment, setAddedAppointment] = React.useState({});
-  const [
-    isAppointmentBeingCreated,
-    setIsAppointmentBeingCreated,
-  ] = React.useState(false);
+  const [addedAppointment, setAddedAppointment] = useState({});
+  const [isAppointmentBeingCreated, setIsAppointmentBeingCreated] =
+    useState(false);
 
   const {
     allowAdding,
@@ -327,7 +326,7 @@ const SchedulerCard = () => {
     allowDragging,
   } = editingOptions;
 
-  const onCommitChanges = React.useCallback(
+  const onCommitChanges = useCallback(
     ({ added, changed, deleted }) => {
       if (added) {
         const startingAddedId =
@@ -350,13 +349,13 @@ const SchedulerCard = () => {
     },
     [setData, setIsAppointmentBeingCreated, data]
   );
-  const onAddedAppointmentChange = React.useCallback((appointment) => {
+  const onAddedAppointmentChange = useCallback((appointment) => {
     setAddedAppointment(appointment);
     setIsAppointmentBeingCreated(true);
   });
 
-  const TimeTableCell = React.useCallback(
-    React.memo(({ onDoubleClick, ...restProps }) => (
+  const TimeTableCell = useCallback(
+    memo(({ onDoubleClick, ...restProps }) => (
       <WeekView.TimeTableCell
         {...restProps}
         onDoubleClick={allowAdding ? onDoubleClick : undefined}
@@ -365,7 +364,7 @@ const SchedulerCard = () => {
     [allowAdding]
   );
 
-  const CommandButton = React.useCallback(
+  const CommandButton = useCallback(
     ({ id, ...restProps }) => {
       if (id === "deleteButton") {
         return (
@@ -381,14 +380,14 @@ const SchedulerCard = () => {
     [allowDeleting]
   );
 
-  const allowDrag = React.useCallback(() => allowDragging && allowUpdating, [
-    allowDragging,
-    allowUpdating,
-  ]);
-  const allowResize = React.useCallback(() => allowResizing && allowUpdating, [
-    allowResizing,
-    allowUpdating,
-  ]);
+  const allowDrag = useCallback(
+    () => allowDragging && allowUpdating,
+    [allowDragging, allowUpdating]
+  );
+  const allowResize = useCallback(
+    () => allowResizing && allowUpdating,
+    [allowResizing, allowUpdating]
+  );
 
   return (
     <React.Fragment>
