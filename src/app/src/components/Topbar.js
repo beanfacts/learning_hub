@@ -1,19 +1,21 @@
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Clock from "./Clock";
 import axios from "../axios";
 import React, { useEffect, useState } from "react";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import Input from "@material-ui/core/Input";
-import { withStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
+import {
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  Button,
+  Dialog,
+  Input,
+  Box,
+  IconButton,
+  Typography,
+  Grid,
+  Paper,
+} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { LightCard } from "./LightCard";
 import { VdoCard } from "./VdoCard";
@@ -166,10 +168,6 @@ const Topbar = () => {
   const handleClose2 = () => {
     setOpen2(false);
   };
-  const updateBuilding = (event) => {
-    setBuilding(event.target.value);
-    setRoom("");
-  };
 
   const updateRoom = (event) => {
     setRoom(event.target.value);
@@ -189,8 +187,6 @@ const Topbar = () => {
     async function fetchdata() {
       // TODO change to actual path
       const request = await axios.get("/rooms");
-      // setRoom(request.data.hm_601.name);
-      // console.log(request.data)
       console.log(request.data);
       setHm(request.data);
       setLoading(true);
@@ -210,14 +206,12 @@ const Topbar = () => {
   let newRoom = null;
   let items = [];
   for (const [k, v] of Object.entries(hm)) {
-    // console.log(k)
     items.push(k);
   }
   newRoom = items.map((value, index) => {
     return <MenuItem value={value}>{value}</MenuItem>;
   });
   console.log({ newRoom });
-
   return (
     <>
       {loading? (
