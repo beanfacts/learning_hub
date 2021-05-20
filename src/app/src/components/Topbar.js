@@ -1,19 +1,21 @@
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Clock from "./Clock";
 import axios from "../axios";
 import React, { useEffect, useState } from "react";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import Input from "@material-ui/core/Input";
-import { withStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
+import {
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  Button,
+  Dialog,
+  Input,
+  Box,
+  IconButton,
+  Typography,
+  Grid,
+  Paper,
+} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { LightCard } from "./LightCard";
 import { VdoCard } from "./VdoCard";
@@ -21,7 +23,7 @@ import { AcCard } from "./AcCard";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
-import Paper from "@material-ui/core/Paper";
+import SettingsRemoteRoundedIcon from "@material-ui/icons/SettingsRemoteRounded";
 
 const StyledButton = withStyles({
   root: {
@@ -182,10 +184,6 @@ const Topbar = () => {
   const handleClose2 = () => {
     setOpen2(false);
   };
-  const updateBuilding = (event) => {
-    setBuilding(event.target.value);
-    setRoom("");
-  };
 
   const updateRoom = (event) => {
     setRoom(event.target.value);
@@ -205,8 +203,6 @@ const Topbar = () => {
     async function fetchdata() {
       // TODO change to actual path
       const request = await axios.get("/rooms");
-      // setRoom(request.data.hm_601.name);
-      // console.log(request.data)
       console.log(request.data);
       setHm(request.data);
       console.log(hm.hm_602.name);
@@ -221,25 +217,16 @@ const Topbar = () => {
       }
     );
   }, []);
-  // console.log(request.data)
-
-  // options = type.map((el) => <MenuItem value={el}>{el}</MenuItem>);
-
-  // for (const [index, value] of elements.entries()) {
-  //   items.push(<li key={index}>{value}</li>)
-  // }
 
   let newRoom = null;
   let items = [];
   for (const [k, v] of Object.entries(hm)) {
-    // console.log(k)
     items.push(k);
   }
   newRoom = items.map((value, index) => {
     return <MenuItem value={value}>{value}</MenuItem>;
   });
   console.log({ newRoom });
-
   return (
     <Grid item xs={12}>
       <Grid item xs container>
@@ -249,25 +236,17 @@ const Topbar = () => {
           </h1>
         </Grid>
         <Grid item xs={2} className={classes.resultAlign}>
-          {/* <p className={classes.resultAlign0}>{building} {room}</p> */}
           <div className={classes.selectedValueDisplay}>
             <Box
               component="div"
               display="inline"
-              p={1}
-              m={1}
               bgcolor="white"
               className={classes.selectedValueDisplay}
             >
-              {/* {building}-{room} */}
               {room}
             </Box>
-            {/* <Box component="div" display="inline" p={1} m={1} bgcolor="white" className={classes.selectedValueDisplay}>
-              {room}
-            </Box> */}
           </div>
         </Grid>
-
         <Grid item xs={8}>
           <div align="right">
             <StyledButton onClick={handleClickOpen}>
@@ -282,26 +261,6 @@ const Topbar = () => {
               <DialogTitle>Select Room to schedule</DialogTitle>
               <DialogContent dividers>
                 <form className={classes.container}>
-                  {/* <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="building-select">Building</InputLabel>
-                    <Select
-                      native
-                      value={building}
-                      onChange={updateBuilding}
-                      input={<Input id="building-select" />}
-                    >
-                      <option aria-label="None" value="" />
-                      {/* <option value={fetchdata()}>HM</option> */}
-                  {/* <option value={"ECC"}>ECC</option>
-                      <option value={"E12"}>E12</option> */}
-                  {/* <option onSelect={setRoom(request.data.hm)} */}
-                  {/* {newRoom.map((value, index) => {
-                        <option value={value}>{index}</option>
-                      })} */}
-                  {/* </Select> */}
-                  {/* </FormControl> */}
-
-                  {/* Room Select */}
                   <div>
                     <FormControl className={classes.formControl}>
                       <InputLabel id="room-select">Room</InputLabel>
@@ -312,20 +271,8 @@ const Topbar = () => {
                         onChange={updateRoom}
                         input={<Input />}
                       >
-                        {/* <option aria-label="None" value="" />
-                      <option value={"HM-505"}>HM-505</option>
-                      <option value={"HM-604"}>HM-604</option>
-                      <option value={"HM-706"}>HM-706</option>
-                      <option value={hm.hm_602.name}>{hm.hm_602.name}</option>
-                       */}
-
                         {newRoom}
-
-                        {/* {options} */}
                       </Select>
-                      {/* {building} */}
-                      {/* {newRoom}
-                      {room} */}
                     </FormControl>
                   </div>
                 </form>
@@ -342,7 +289,7 @@ const Topbar = () => {
           </div>
         </Grid>
         <Grid item xs={1}>
-          <div>
+          <>
             <StyledButton onClick={handleClickOpen2}>Controller</StyledButton>
             <Dialog
               onClose={handleClose2}
@@ -357,18 +304,15 @@ const Topbar = () => {
               </DialogTitle>
               <DialogContent dividers>
                 <Grid item xs={12} container direction="row">
-                  {/* <Grid item xs={2}></Grid> */}
                   <Grid item xs={4}>
                     <VdoCard />
                   </Grid>
                   <Grid item xs={4}>
                     <LightCard room={room} />
-                    {/* TODO change the "hm_602" to dynamic value (the value that you stored) */}
                   </Grid>
                   <Grid item xs={4}>
                     <AcCard room={room} />
                   </Grid>
-                  {/* <Grid item xs={2}></Grid> */}
                 </Grid>
               </DialogContent>
               <DialogActions>
@@ -377,7 +321,7 @@ const Topbar = () => {
                 </Button>
               </DialogActions>
             </Dialog>
-          </div>
+          </>
         </Grid>
       </Grid>
     </Grid>
