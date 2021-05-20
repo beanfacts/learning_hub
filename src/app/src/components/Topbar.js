@@ -14,7 +14,6 @@ import {
   IconButton,
   Typography,
   Grid,
-  Paper,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { LightCard } from "./LightCard";
@@ -23,7 +22,6 @@ import { AcCard } from "./AcCard";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
-import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const StyledButton = withStyles({
@@ -154,7 +152,6 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 const Topbar = () => {
-  const [building, setBuilding] = useState("None");
   const [room, setRoom] = useState(["None"]);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -190,7 +187,6 @@ const Topbar = () => {
       console.log(request.data);
       setHm(request.data);
       setLoading(true);
-      console.log(hm.hm_602.name);
       return request;
     }
     fetchdata().then(
@@ -205,7 +201,7 @@ const Topbar = () => {
 
   let newRoom = null;
   let items = [];
-  for (const [k, v] of Object.entries(hm)) {
+  for (const [k] of Object.entries(hm)) {
     items.push(k);
   }
   newRoom = items.map((value, index) => {

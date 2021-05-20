@@ -6,7 +6,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { Topbar } from "./components/Topbar";
 import { SchedulerCard } from "./components/SchedulerCard";
-import { Register } from "./components/Register";
+// import { Register } from "./components/Register";
 import "./App.css";
 // import Paper from "@material-ui/core/Paper";
 // import VideoIcon from "@material-ui/icons/OndemandVideoRounded";

@@ -1,7 +1,7 @@
 import VideoIcon from "@material-ui/icons/OndemandVideoRounded";
 import ErrorIcon from "@material-ui/icons/ErrorOutlineRounded";
 import { makeStyles } from "@material-ui/core/styles";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Paper from "@material-ui/core/Paper";
 import axios from "../axios";
 
