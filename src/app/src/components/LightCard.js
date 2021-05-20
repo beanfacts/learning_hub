@@ -39,17 +39,15 @@ const LightCard = ({ room }) => {
       console.log(e);
     }
   };
-
   useEffect(() => {
     lights();
   }, []);
 
   const handleChange = (event) => {
-    // setState({ ...state, [event.target.name]: event.target.checked });
     setThings({
       ...things,
       [event.target.name]: {
-        ...things[event.target.name], // Spread the font object to preserve all values
+        ...things[event.target.name], // gets all the previous values
         sensors: {
           state: event.target.checked,
         },
@@ -64,7 +62,8 @@ const LightCard = ({ room }) => {
         console.log(error);
       });
   };
-
+  const lights_num = Object.keys(things).length;
+  const lights_keys = Object.keys(things);
   const classes = useStyles();
   return (
     <>
@@ -76,16 +75,14 @@ const LightCard = ({ room }) => {
           <Grid item xs={12}>
             <Grid item xs container direction="row">
               <Grid item xs={6}>
-                {Object.keys(things).length >= 1 &&
-                things[Object.keys(things)[0]].sensors.state ? (
+                {lights_num > 0 && things[lights_keys[0]].sensors.state ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
                 )}
               </Grid>
               <Grid item xs={6}>
-                {Object.keys(things).length > 1 &&
-                things[Object.keys(things)[1]].sensors.state ? (
+                {lights_num > 1 && things[lights_keys[1]].sensors.state ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
@@ -93,15 +90,15 @@ const LightCard = ({ room }) => {
               </Grid>
               <Grid item xs={6}>
                 <Switch
-                  disabled={Object.keys(things).length >= 1 ? false : true}
+                  disabled={lights_num > 0 ? false : true}
                   checked={
-                    Object.keys(things).length >= 1
-                      ? things[Object.keys(things)[0]].sensors.state
+                    lights_num > 0
+                      ? things[lights_keys[0]].sensors.state
                       : false
                   }
                   onChange={handleChange}
                   color="primary"
-                  name={Object.keys(things)[0]}
+                  name={lights_keys[0]}
                   inputProps={{
                     "aria-label": "primary checkbox",
                   }}
@@ -109,15 +106,15 @@ const LightCard = ({ room }) => {
               </Grid>
               <Grid item xs={6}>
                 <Switch
-                  disabled={Object.keys(things).length > 1 ? false : true}
+                  disabled={lights_num > 1 ? false : true}
                   checked={
-                    Object.keys(things).length > 1
-                      ? things[Object.keys(things)[1]].sensors.state
+                    lights_num > 1
+                      ? things[lights_keys[1]].sensors.state
                       : false
                   }
                   onChange={handleChange}
                   color="primary"
-                  name={Object.keys(things)[1]}
+                  name={lights_keys[1]}
                   inputProps={{
                     "aria-label": "primary checkbox",
                   }}
@@ -126,16 +123,14 @@ const LightCard = ({ room }) => {
             </Grid>
             <Grid item xs container direction="row">
               <Grid item xs={6}>
-                {Object.keys(things).length > 2 &&
-                things[Object.keys(things)[2]].sensors.state ? (
+                {lights_num > 2 && things[lights_keys[2]].sensors.state ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
                 )}
               </Grid>
               <Grid item xs={6}>
-                {Object.keys(things).length > 3 &&
-                things[Object.keys(things)[3]].sensors.state ? (
+                {lights_num > 3 && things[lights_keys[3]].sensors.state ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
@@ -143,15 +138,15 @@ const LightCard = ({ room }) => {
               </Grid>
               <Grid item xs={6}>
                 <Switch
-                  disabled={Object.keys(things).length > 2 ? false : true}
+                  disabled={lights_num > 2 ? false : true}
                   checked={
-                    Object.keys(things).length > 2
-                      ? things[Object.keys(things)[2]].sensors.state
+                    lights_num > 2
+                      ? things[lights_keys[2]].sensors.state
                       : false
                   }
                   onChange={handleChange}
                   color="primary"
-                  name={Object.keys(things)[2]}
+                  name={lights_keys[2]}
                   inputProps={{
                     "aria-label": "primary checkbox",
                   }}
@@ -159,15 +154,15 @@ const LightCard = ({ room }) => {
               </Grid>
               <Grid item xs={6}>
                 <Switch
-                  disabled={Object.keys(things).length > 3 ? false : true}
+                  disabled={lights_num > 3 ? false : true}
                   checked={
-                    Object.keys(things).length > 3
-                      ? things[Object.keys(things)[3]].sensors.state
+                    lights_num > 3
+                      ? things[lights_keys[3]].sensors.state
                       : false
                   }
                   onChange={() => handleChange}
                   color="primary"
-                  name={Object.keys(things)[3]}
+                  name={lights_keys[3]}
                   inputProps={{
                     "aria-label": "primary checkbox",
                   }}
