@@ -47,7 +47,7 @@ things = {
             "temp": 23.0,
             "fan": 3,
             "mode": "cool",
-            "swing": True
+            "swing": "auto"
         } 
     },
     "7d649028": {
