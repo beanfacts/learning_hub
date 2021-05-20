@@ -14,7 +14,6 @@ import {
   IconButton,
   Typography,
   Grid,
-  Paper,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { LightCard } from "./LightCard";
@@ -139,7 +138,6 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 const Topbar = () => {
-  const [building, setBuilding] = useState("None");
   const [room, setRoom] = useState(["None"]);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -175,7 +173,6 @@ const Topbar = () => {
       console.log(request.data);
       setHm(request.data);
       setLoading(true);
-      console.log(hm.hm_602.name);
       return request;
     }
     fetchdata().then(
@@ -190,7 +187,7 @@ const Topbar = () => {
 
   let newRoom = null;
   let items = [];
-  for (const [k, v] of Object.entries(hm)) {
+  for (const [k] of Object.entries(hm)) {
     items.push(k);
   }
   newRoom = items.map((value, index) => {

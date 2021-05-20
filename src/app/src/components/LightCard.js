@@ -31,7 +31,7 @@ const LightCard = ({ room }) => {
   const lights = async () => {
     try {
       var path = `/things?room_id=${room}&type=light`;
-      const res = await axios.get(path).then((res) => {
+      await axios.get(path).then((res) => {
         setThings(res.data.result);
       });
       setLoading(true);
