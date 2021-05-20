@@ -48,7 +48,7 @@ const AcCard = ({ room }) => {
     setSwing(event.target.value);
   };
 
-  const [ac, setAC] = useState(false);
+  const [ac, setAC] = useState(false); //on off state
   const handleAC = (event) => {
     setAC((prev) => !prev);
   };
@@ -71,26 +71,43 @@ const AcCard = ({ room }) => {
     },
   ];
 
-  useEffect(() => {
-    //axios function
-    async function fetchdata() {
-      // TODO change to actual path
-      var path = `/things?room_id=${room}`;
-      const request = await axios.get(path);
-      // console.log(request.data.results);
-      return request;
+  const [acdata, setAcdata] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const aircond = async() => {
+    try {
+      var path = `/things?room_id=${room}&type=ac`;
+      const res = await axios.get(path).then((res)=>{
+        setAcdata(res.data.result);
+      });
+      setLoading(true);
+    } catch(e){
+      console.log(e)
     }
-    fetchdata().then(
-      (response) => {
-        console.log(response);
-        console.log(response.data);
-        // console.log(request);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  }, [room]);
+  };
+
+  useEffect(() => {
+    aircond();
+  }, []);
+    //axios function
+  //   async function fetchdata() {
+  //     // TODO change to actual path
+  //     var path = `/things?room_id=${room}`;
+  //     const request = await axios.get(path);
+  //     // console.log(request.data.results);
+  //     return request;
+  //   }
+  //   fetchdata().then(
+  //     (response) => {
+  //       console.log(response);
+  //       console.log(response.data);
+  //       // console.log(request);
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
+  // }, [room]);
   return (
     <Paper className={classes.first}>
       <Grid item xs={12}>
