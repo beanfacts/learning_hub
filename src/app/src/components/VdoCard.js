@@ -8,7 +8,7 @@ import axios from "../axios";
 const useStyles = makeStyles((theme) => ({
   center: {
     textAlign: "-moz-center",
-    color: "rgba(0, 0, 0, 0.3)",
+    color: "#b2b2b2",
   },
   first: {
     padding: theme.spacing(4),
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
   icons: {
     fontSize: "10rem",
-    color: "rgba(0, 0, 0, 0.3)",
+    color: "#b2b2b2",
   },
 }));
 
