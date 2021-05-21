@@ -81,6 +81,8 @@ const useStyles = makeStyles((theme) => ({
   },
   resultAlign: {
     align: "left",
+    display: "flex",
+    alignItems: "center",
     fontSize: 20,
     fontWeight: "bold",
     flexGrow: "1",

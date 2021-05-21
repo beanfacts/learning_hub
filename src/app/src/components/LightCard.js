@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
   BulbIcon: {
     fontSize: "7rem",
-    color: "rgba(0, 0, 0, 0.3)",
+    color: "#b2b2b2",
   },
   BulbIconLit: {
     fontSize: "7rem",

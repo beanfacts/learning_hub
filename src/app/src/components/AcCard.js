@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 const useStyles = makeStyles((theme) => ({
   center: {
     textAlign: "-moz-center",
-    color: "rgba(0, 0, 0, 0.3)",
+    color: "#b2b2b2",
   },
   first: {
     padding: theme.spacing(4),
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   fonts: {
     fontSize: "5rem",
-    color: "rgba(0, 0, 0, 0.3)",
+    color: "#b2b2b2",
   },
   formControl: {
     margin: theme.spacing(1),
@@ -59,15 +59,20 @@ const AcCard = ({ room }) => {
   ];
 
   const [acdata, setAcdata] = useState([]);
+  const [acexist, setAcexist] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const aircond = async () => {
     try {
       var path = `/things?room_id=${room}&type=ac`;
-      await axios.get(path).then((res) => {
+      const res = await axios.get(path).then((res) => {
         setAcdata(res.data.result);
       });
       setLoading(true);
+      console.log(res);
+      if (acdata[Object.keys(acdata)[0]] === undefined) {
+        setAcexist(false);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -106,19 +111,19 @@ const AcCard = ({ room }) => {
       [ac_keys[0]]: {
         ...acdata[ac_keys[0]],
         sensors: {
-          ...acdata[ac_keys[0]].sensors,
+          ...acdata[ac_keys].sensors,
           temp: data,
         },
       },
     });
 
     let id = name;
-    acdata[id].sensors.temp = data;
-    console.log("data",data)
-    console.log("name",name)
-    console.log("acdata",acdata[id].sensors.temp)
+    console.log(typeof acdata[ac_keys[0]].sensors.temp);
+    console.log(typeof data);
+
+    // acdata[id].sensors.temp = data.toFixed(2);
     axios
-      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors)
+      .post(`/control?id=${ac_keys[0]}`, acdata[ac_keys[0]].sensors)
       .then(() => (error) => {
         console.log(error);
       });
@@ -139,7 +144,7 @@ const AcCard = ({ room }) => {
     let id = ac_keys[0];
     acdata[id].sensors.fan = val;
     axios
-      .post(`/control?id=${id}`, acdata[id].sensors)
+      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors)
       .then(() => (error) => {
         console.log(error);
       });
@@ -188,8 +193,8 @@ const AcCard = ({ room }) => {
         console.log(error);
       });
   };
-
   const ac_keys = Object.keys(acdata);
+
   return (
     <>
       {loading ? (
@@ -223,7 +228,7 @@ const AcCard = ({ room }) => {
               max={30}
               value={
                 acdata[ac_keys[0]].sensors.temp == null
-                  ?24
+                  ? 24
                   : acdata[ac_keys[0]].sensors.temp
               }
               onChange={handleTempChange(ac_keys[0])}
