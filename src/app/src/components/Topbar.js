@@ -15,15 +15,15 @@ import {
   Typography,
   Grid,
 } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
-import { LightCard } from "./LightCard";
-import { VdoCard } from "./VdoCard";
 import { AcCard } from "./AcCard";
+import { VdoCard } from "./VdoCard";
+import { LightCard } from "./LightCard";
+import CloseIcon from "@material-ui/icons/Close";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
+import Remote from "@material-ui/icons/SettingsRemoteRounded";
 const StyledButton = withStyles({
   root: {
     background: "#3f51b5",
@@ -68,16 +68,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     color: "#a3a5a9",
   },
+  round: {
+    borderRadius: 50,
+  },
   formControl: {
     margin: theme.spacing(1),
     minWidth: 200,
-  },
-  textFieldStyle: {
-    border: "1px light grey",
-    borderRadius: theme.shape.borderRadius,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
   },
   container: {
     display: "flex",
@@ -87,13 +83,13 @@ const useStyles = makeStyles((theme) => ({
     align: "left",
     fontSize: 20,
     fontWeight: "bold",
+    flexGrow: "1",
     padding: theme.spacing(2),
     color: "rgba(0, 0, 0, 0.3)",
   },
   selectedValueDisplay: {
     align: "left",
-    borderRadius: 6,
-    minWidth: 200,
+    borderRadius: 5,
     padding: theme.spacing(2),
   },
   title: {
@@ -142,6 +138,7 @@ const Topbar = () => {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedroom, setSelectedroom] = useState(false);
   const classes = useStyles();
 
   const handleClickOpen2 = () => {
@@ -154,6 +151,7 @@ const Topbar = () => {
 
   const updateRoom = (event) => {
     setRoom(event.target.value);
+    setSelectedroom(true);
   };
 
   const handleClickOpen = () => {
@@ -197,112 +195,105 @@ const Topbar = () => {
   return (
     <>
       {loading ? (
-        <Grid item xs={12}>
-          <Grid item xs container>
-            <Grid zeroMinWidth={true}>
-              <h1 className={classes.left} margin={2}>
-                <Clock />
-              </h1>
-            </Grid>
-            <Grid item xs={2} className={classes.resultAlign}>
-              <div className={classes.selectedValueDisplay}>
-                <Box
-                  component="div"
-                  display="inline"
-                  p={1}
-                  m={1}
-                  bgcolor="white"
-                  className={classes.selectedValueDisplay}
-                >
-                  {room}
-                </Box>
-              </div>
-            </Grid>
-
-            <Grid item xs={8}>
-              <div align="right">
-                <StyledButton onClick={handleClickOpen}>
-                  Select Building & Room
-                </StyledButton>
-                <Dialog
-                  disableBackdropClick
-                  disableEscapeKeyDown
-                  open={open}
-                  onClose={handleClose}
-                >
-                  <DialogTitle>Select Room to schedule</DialogTitle>
-                  <DialogContent dividers>
-                    <form className={classes.container}>
-                      <div>
-                        <FormControl className={classes.formControl}>
-                          <InputLabel id="room-select">Room</InputLabel>
-                          <Select
-                            labelId="room-select"
-                            id="room-select"
-                            value={room}
-                            onChange={updateRoom}
-                            input={<Input />}
-                          >
-                            {newRoom}
-                          </Select>
-                        </FormControl>
-                      </div>
-                    </form>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                      Cancel
-                    </Button>
-                    <Button onClick={handleClose} color="primary">
-                      Ok
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </div>
-            </Grid>
-            <Grid item xs={1}>
-              <div>
-                <StyledButton onClick={handleClickOpen2}>
-                  Controller
-                </StyledButton>
-                <Dialog
-                  onClose={handleClose2}
-                  aria-labelledby="customized-dialog-title"
-                  open={open2}
-                  maxWidth="lg"
-                  fullWidth={true}
-                  onBackdropClick={handleClose2}
-                >
-                  <DialogTitle
-                    id="customized-dialog-title"
-                    onClose={handleClose2}
-                  >
-                    Controller
-                  </DialogTitle>
-                  <DialogContent dividers>
-                    <Grid item xs={12} container direction="row">
-                      {/* <Grid item xs={2}></Grid> */}
-                      <Grid item xs={4}>
-                        <VdoCard />
-                      </Grid>
-                      <Grid item xs={4}>
-                        <LightCard room={room} />
-                        {/* TODO change the "hm_602" to dynamic value (the value that you stored) */}
-                      </Grid>
-                      <Grid item xs={4}>
-                        <AcCard room={room} />
-                      </Grid>
-                      {/* <Grid item xs={2}></Grid> */}
-                    </Grid>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button autoFocus onClick={handleClose2} color="primary">
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </div>
-            </Grid>
+        <Grid container>
+          <Grid item>
+            <h1 className={classes.left} margin={2}>
+              <Clock />
+            </h1>
+          </Grid>
+          <Grid item className={classes.resultAlign}>
+            <div className={classes.selectedValueDisplay}>
+              <Box
+                component="div"
+                display="inline"
+                p={1}
+                m={1}
+                bgcolor="white"
+                className={classes.selectedValueDisplay}
+              >
+                {room}
+              </Box>
+            </div>
+          </Grid>
+          <Grid item>
+            <StyledButton onClick={handleClickOpen} className={classes.round}>
+              Select Building & Room
+            </StyledButton>
+            <Dialog
+              disableBackdropClick
+              disableEscapeKeyDown
+              open={open}
+              onClose={handleClose}
+            >
+              <DialogTitle>Select Room to schedule</DialogTitle>
+              <DialogContent dividers>
+                <form className={classes.container}>
+                  <div>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel id="room-select">Room</InputLabel>
+                      <Select
+                        labelId="room-select"
+                        id="room-select"
+                        value={room}
+                        onChange={updateRoom}
+                        input={<Input />}
+                      >
+                        {newRoom}
+                      </Select>
+                    </FormControl>
+                  </div>
+                </form>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={handleClose} color="primary">
+                  Ok
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Grid>
+          <Grid item>
+            <IconButton
+              disabled={selectedroom ? false : true}
+              onClick={handleClickOpen2}
+              color="primary"
+            >
+              <Remote style={{ fontSize: 55 }} />
+            </IconButton>
+            <Dialog
+              onClose={handleClose2}
+              open={open2}
+              maxWidth="lg"
+              fullWidth={true}
+              onBackdropClick={handleClose2}
+            >
+              <DialogTitle id="customized-dialog-title" onClose={handleClose2}>
+                Controller
+              </DialogTitle>
+              <DialogContent dividers>
+                <Grid item xs={12} container direction="row">
+                  {/* <Grid item xs={2}></Grid> */}
+                  <Grid item xs={4}>
+                    <VdoCard />
+                  </Grid>
+                  <Grid item xs={4}>
+                    <LightCard room={room} />
+                    {/* TODO change the "hm_602" to dynamic value (the value that you stored) */}
+                  </Grid>
+                  <Grid item xs={4}>
+                    <AcCard room={room} />
+                  </Grid>
+                  {/* <Grid item xs={2}></Grid> */}
+                </Grid>
+              </DialogContent>
+              <DialogActions>
+                <Button autoFocus onClick={handleClose2} color="primary">
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Grid>
         </Grid>
       ) : (
