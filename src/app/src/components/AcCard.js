@@ -106,19 +106,19 @@ const AcCard = ({ room }) => {
       [ac_keys[0]]: {
         ...acdata[ac_keys[0]],
         sensors: {
-          ...acdata[ac_keys].sensors,
+          ...acdata[ac_keys[0]].sensors,
           temp: data,
         },
       },
     });
 
     let id = name;
-    console.log(typeof acdata[ac_keys[0]].sensors.temp);
-    console.log(typeof data);
-
-    // acdata[id].sensors.temp = data.toFixed(2);
+    acdata[id].sensors.temp = data;
+    console.log("data",data)
+    console.log("name",name)
+    console.log("acdata",acdata[id].sensors.temp)
     axios
-      .post(`/control?id=${ac_keys[0]}`, acdata[ac_keys[0]].sensors)
+      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors)
       .then(() => (error) => {
         console.log(error);
       });
@@ -139,7 +139,7 @@ const AcCard = ({ room }) => {
     let id = ac_keys[0];
     acdata[id].sensors.fan = val;
     axios
-      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors)
+      .post(`/control?id=${id}`, acdata[id].sensors)
       .then(() => (error) => {
         console.log(error);
       });
@@ -223,7 +223,7 @@ const AcCard = ({ room }) => {
               max={30}
               value={
                 acdata[ac_keys[0]].sensors.temp == null
-                  ? 24
+                  ?24
                   : acdata[ac_keys[0]].sensors.temp
               }
               onChange={handleTempChange(ac_keys[0])}

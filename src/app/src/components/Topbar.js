@@ -96,23 +96,9 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 200,
     padding: theme.spacing(2),
   },
-  appBar: {
-    position: "relative",
-  },
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
-  },
-  first: {
-    padding: theme.spacing(4),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-    height: "90%",
-  },
-  parentPaper: {
-    padding: theme.spacing(2),
-    margin: "auto",
-    maxWidth: "90%",
   },
   icons: {
     fontSize: "10rem",
@@ -210,7 +196,7 @@ const Topbar = () => {
   console.log({ newRoom });
   return (
     <>
-      {loading? (
+      {loading ? (
         <Grid item xs={12}>
           <Grid item xs container>
             <Grid zeroMinWidth={true}>
@@ -229,7 +215,7 @@ const Topbar = () => {
                   className={classes.selectedValueDisplay}
                 >
                   {room}
-                </Box>     
+                </Box>
               </div>
             </Grid>
 
@@ -247,7 +233,6 @@ const Topbar = () => {
                   <DialogTitle>Select Room to schedule</DialogTitle>
                   <DialogContent dividers>
                     <form className={classes.container}>
-              
                       <div>
                         <FormControl className={classes.formControl}>
                           <InputLabel id="room-select">Room</InputLabel>
@@ -277,7 +262,9 @@ const Topbar = () => {
             </Grid>
             <Grid item xs={1}>
               <div>
-                <StyledButton onClick={handleClickOpen2}>Controller</StyledButton>
+                <StyledButton onClick={handleClickOpen2}>
+                  Controller
+                </StyledButton>
                 <Dialog
                   onClose={handleClose2}
                   aria-labelledby="customized-dialog-title"
@@ -286,7 +273,10 @@ const Topbar = () => {
                   fullWidth={true}
                   onBackdropClick={handleClose2}
                 >
-                  <DialogTitle id="customized-dialog-title" onClose={handleClose2}>
+                  <DialogTitle
+                    id="customized-dialog-title"
+                    onClose={handleClose2}
+                  >
                     Controller
                   </DialogTitle>
                   <DialogContent dividers>
@@ -315,8 +305,8 @@ const Topbar = () => {
             </Grid>
           </Grid>
         </Grid>
-      ): (
-        <div className={classes.first}>
+      ) : (
+        <div className={classes.center}>
           <CircularProgress></CircularProgress>
         </div>
       )}

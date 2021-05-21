@@ -23,7 +23,7 @@ API_PATH = "/api/v1"
         
         Key             Value Meaning       Type
         "state"         Power State         Bool
-        "temp"          Temperature         Float
+        "temp"          Temperature         Int
         "fan"           Fan speed           0 ~ 3 - 0 is off and 3 is max
         "swing"         Swing state         Bool
 
@@ -44,7 +44,7 @@ things = {
         "room": "hm_601",
         "sensors": {
             "state": True,
-            "temp": 23.0,
+            "temp": 23,
             "fan": 3,
             "mode": "cool",
             "swing": "auto"
@@ -83,7 +83,7 @@ things = {
         "room": "hm_602",
         "sensors": {
             "state": False,
-            "temp": None,
+            "temp": int(),
             "fan": None,
             "mode": None,
             "swing": None

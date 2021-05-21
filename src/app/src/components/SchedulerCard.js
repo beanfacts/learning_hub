@@ -1,5 +1,6 @@
-import * as React from "react";
+import React, { useCallback, useState, memo } from "react";
 import Paper from "@material-ui/core/Paper";
+import moment from "moment";
 
 import {
   ViewState,
@@ -53,7 +54,7 @@ const SchedulerCard = () => {
     allowDragging,
   } = editingOptions;
 
-  const onCommitChanges = React.useCallback(
+  const onCommitChanges = useCallback(
     ({ added, changed, deleted }) => {
       if (added) {
         const startingAddedId =
@@ -82,8 +83,8 @@ const SchedulerCard = () => {
     setIsAppointmentBeingCreated(true);
   });
 
-  const TimeTableCell = React.useCallback(
-    React.memo(({ onDoubleClick, ...restProps }) => (
+  const TimeTableCell = useCallback(
+    memo(({ onDoubleClick, ...restProps }) => (
       <WeekView.TimeTableCell
         {...restProps}
         onDoubleClick={allowAdding ? onDoubleClick : undefined}
@@ -92,7 +93,7 @@ const SchedulerCard = () => {
     [allowAdding]
   );
 
-  const CommandButton = React.useCallback(
+  const CommandButton = useCallback(
     ({ id, ...restProps }) => {
       if (id === "deleteButton") {
         return (
