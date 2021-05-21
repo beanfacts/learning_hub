@@ -1,5 +1,6 @@
-import React, { useCallback, useState, memo } from "react";
+import React, { useCallback, useEffect, useState, memo } from "react";
 import Paper from "@material-ui/core/Paper";
+import axios from "../axios";
 import moment from "moment";
 
 import {
@@ -21,22 +22,62 @@ import {
 } from "@devexpress/dx-react-scheduler-material-ui";
 import { owners, appointments } from "../components/data/tasks";
 
-const currentDate1 = "2021-04-27";
-const SchedulerCard = () => {
-  const [data, setData] = React.useState(appointments);
-  const [student, setStudent] = React.useState(true);
+const SchedulerCard = ({ room }) => {
+  const currentDate1 = moment();
+  const [things, setThings] = useState([]);
+  const [loading, setLoading] = useState(false);
+  /* getting the data from api
+  const schedule = async () => {
+    try {
+      var path = `/things?room_id=${room}&type=light`;
+      await axios.get(path).then((res) => {
+        setThings(res.data.result);
+      });
+      setLoading(true);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    schedule();
+  }, []);
+*/
 
-  const [currentDate, setCurrentDate] = React.useState(currentDate1);
-  const [editingOptions, setEditingOptions] = React.useState({
-    allowAdding: true,
-    allowDeleting: true,
-    allowUpdating: true,
-    allowDragging: true,
-    allowResizing: true,
+  /* sending the data back
+  const handleChange = (event) => {
+    setThings({
+      ...things,
+      [event.target.name]: {
+        ...things[event.target.name], // gets all the previous values
+        sensors: {
+          state: event.target.checked,
+        },
+      },
+    });
+    let id = event.target.name;
+    console.log(event.target.name);
+    things[id].sensors.state = event.target.checked;
+    axios
+      .post(`/control?id=${event.target.name}`, things[id].sensors)
+      .then(() => (error) => {
+        console.log(error);
+      });
+  };
+*/
+  const [data, setData] = useState(appointments);
+  const [teacher, setTeacher] = useState(true);
+
+  const [currentDate, setCurrentDate] = useState(currentDate1);
+  const [editingOptions, setEditingOptions] = useState({
+    allowAdding: teacher,
+    allowDeleting: teacher,
+    allowUpdating: teacher,
+    allowDragging: teacher,
+    allowResizing: teacher,
   });
-  const [addedAppointment, setAddedAppointment] = React.useState({});
+  const [addedAppointment, setAddedAppointment] = useState({});
   const [isAppointmentBeingCreated, setIsAppointmentBeingCreated] =
-    React.useState(false);
+    useState(false);
 
   const resources = [
     {
@@ -78,11 +119,11 @@ const SchedulerCard = () => {
     [setData, setIsAppointmentBeingCreated, data]
   );
 
-  const onAddedAppointmentChange = React.useCallback((appointment) => {
+  const onAddedAppointmentChange = useCallback((appointment) => {
     setAddedAppointment(appointment);
     setIsAppointmentBeingCreated(true);
   });
-
+  console.log(data);
   const TimeTableCell = useCallback(
     memo(({ onDoubleClick, ...restProps }) => (
       <WeekView.TimeTableCell
@@ -109,12 +150,12 @@ const SchedulerCard = () => {
     [allowDeleting]
   );
 
-  const allowDrag = React.useCallback(
+  const allowDrag = useCallback(
     () => allowDragging && allowUpdating,
     [allowDragging, allowUpdating]
   );
 
-  const allowResize = React.useCallback(
+  const allowResize = useCallback(
     () => allowResizing && allowUpdating,
     [allowResizing, allowUpdating]
   );
@@ -153,19 +194,3 @@ const SchedulerCard = () => {
 };
 
 export { SchedulerCard };
-// ```
-// Air Conditioner Sensors:
-//         Key             Value Meaning       Type
-//         "title"         Power State         Bool
-//         "startDate"     starting time       string - auto,
-//         ""
-// ```
-// ```
-// {
-//   title: "Website Re-Design Plan",
-//   startDate: new Date(2021, 4, 25, 9, 35),
-//   endDate: new Date(2021, 4, 25, 11, 30),
-//   id: 0,
-//   location: "Room 1",
-// },
-// ```
