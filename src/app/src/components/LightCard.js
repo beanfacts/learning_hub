@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(4),
     textAlign: "center",
     color: theme.palette.text.secondary,
-    height: "100%",
+    height: "90%",
   },
   BulbIcon: {
     fontSize: "7rem",

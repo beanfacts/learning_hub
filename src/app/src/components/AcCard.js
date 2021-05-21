@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
   first: {
     padding: theme.spacing(4),
     textAlign: "center",
-    color: theme.palette.text.secondary,
     height: "90%",
   },
   fonts: {
