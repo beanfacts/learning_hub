@@ -1,18 +1,17 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import VideoIcon from "@material-ui/icons/OndemandVideoRounded";
+import ErrorIcon from "@material-ui/icons/ErrorOutlineRounded";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { Topbar } from "./components/Topbar";
+import { LightCard } from "./components/LightCard";
+import { AcCard } from "./components/AcCard";
 import { SchedulerCard } from "./components/SchedulerCard";
-// import { Register } from "./components/Register";
 import "./App.css";
-// import Paper from "@material-ui/core/Paper";
-// import VideoIcon from "@material-ui/icons/OndemandVideoRounded";
-// import ErrorIcon from "@material-ui/icons/ErrorOutlineRounded";
-// import { LightCard } from "./components/LightCard";
-// import { AcCard } from "./components/AcCard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,7 +59,7 @@ function a11yProps(index) {
 
 export default function AutoGrid() {
   const classes = useStyles();
-  // const videoConnected = true;
+  const videoConnected = true;
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -74,16 +73,52 @@ export default function AutoGrid() {
           aria-label="simple tabs example"
         >
           <Tab label="Scheduler" {...a11yProps(0)} />
-          {/* <Tab label="Controller" {...a11yProps(1)} /> */}
+          <Tab label="Controller" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <div className="App-header">
         <TabPanel value={value} index={0}>
           <Grid container spacing={2} className={classes.parentPaper}>
-            {/* <Register /> */}
-            <Topbar />
-            <SchedulerCard />
+          <Topbar/>
+          <SchedulerCard />
           </Grid>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <div className={classes.root}>
+            <Grid container spacing={2} className={classes.parentPaper}>
+              {/* top most line of the app where time is located */}
+              <Topbar />
+              <Grid item xs={12} container direction="row">
+                <Grid spacing={2} item xs container>
+                  {/* video container */}
+                  <Grid item xs={4}>
+                    <Paper className={classes.first}>
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      {videoConnected ? (
+                        <VideoIcon className={classes.icons} />
+                      ) : (
+                        <ErrorIcon className={classes.icons} />
+                      )}
+                    </Paper>
+                  </Grid>
+                  {/* light container */}
+                  <Grid item xs={4} zeroMinWidth>
+                    <LightCard />
+                  </Grid>
+                  {/* ac container */}
+                  <Grid item xs={4} zeroMinWidth>
+                    <AcCard />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
         </TabPanel>
       </div>
     </>
