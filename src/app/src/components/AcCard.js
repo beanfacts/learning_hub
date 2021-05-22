@@ -70,11 +70,11 @@ const AcCard = ({ room }) => {
       var path = `/things?room_id=${room}&type=ac`;
       const res = await axios.get(path,head).then((res) => {
         setAcdata(res.data.result.things);
-        if(acdata.length>0){
+        if(acdata!=null){
           setHaveData(true);
         }
-        // console.log("STATE", res.data.result.things);
-        // console.log("ACDATA", acdata.brightAc)
+        console.log("STATE", res.data.result.things);
+        console.log("ACDATA", acdata.brightAc)
       });
       setLoading(true)
       // console.log(res.data);

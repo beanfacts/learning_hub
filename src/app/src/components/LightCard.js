@@ -52,6 +52,8 @@ const LightCard = ({ room }) => {
   }, []);
 
   const handleChange = (val) => (event) => {
+    var temp = things[Object.keys(things)].sensors.desired.state;
+    temp[val] = event.target.checked;
     setThings({
       ...things,
       [event.target.name]: {
@@ -59,22 +61,12 @@ const LightCard = ({ room }) => {
         sensors: {
           ...things[event.target.name].sensors,
           desired:{
-            state: [true,false,true,true],
+            state: temp,
           }
         },
       },
     });
     let id = event.target.name;
-    // console.log(event.target.name);
-    // things[id].sensors.state = event.target.checked;
-    // useLayoutEffect(() => {
-    //   console.log( things[id].sensors.desired.state);
-    //   axios
-    //     .post(`/control?thing_id=${Object.keys(things)}`, things[id].sensors.desired, head)
-    //     .then(() => (error) => {
-    //       console.log(error);
-    //     });
-    // },[things]);
   };
   useDidMountEffect(()=>{
       console.log( things[Object.keys(things)].sensors.desired.state);
