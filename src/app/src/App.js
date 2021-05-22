@@ -3,10 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import "./App.css";
 import Navigation from "./components/Navigation";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'; 
-import Schedule from "./components/Schedule";
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
-import ForgetPassword from "./components/ForgetPassword";
+import Schedule from "./pages/Schedule";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import ForgetPassword from "./pages/ForgetPassword";
 
 
 export default function AutoGrid() {

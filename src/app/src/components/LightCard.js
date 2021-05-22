@@ -7,6 +7,10 @@ import BulbIcon from "@material-ui/icons/WbIncandescentRounded";
 import Switch from "@material-ui/core/Switch";
 import axios from "../axios";
 
+const head = {
+  headers: {'sessid': sessionStorage.getItem("sessid")}
+}
+
 const useStyles = makeStyles((theme) => ({
   first: {
     padding: theme.spacing(4),
@@ -31,10 +35,11 @@ const LightCard = ({ room }) => {
   const lights = async () => {
     try {
       var path = `/things?room_id=${room}&type=light`;
-      await axios.get(path).then((res) => {
+      await axios.get(path,head).then((res) => {
         setThings(res.data.result);
+        console.log(res.data.result)
       });
-      setLoading(true);
+      setLoading(false);
     } catch (e) {
       console.log(e);
     }
@@ -57,7 +62,7 @@ const LightCard = ({ room }) => {
     console.log(event.target.name);
     things[id].sensors.state = event.target.checked;
     axios
-      .post(`/control?id=${event.target.name}`, things[id].sensors)
+      .post(`/control?id=${event.target.name}`, things[id].sensors, head)
       .then(() => (error) => {
         console.log(error);
       });

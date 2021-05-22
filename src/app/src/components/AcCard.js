@@ -15,6 +15,10 @@ import {
 import axios from "../axios";
 import React, { useEffect, useState } from "react";
 
+const head = {
+  headers: {'sessid': sessionStorage.getItem("sessid")}
+}
+
 const useStyles = makeStyles((theme) => ({
   center: {
     textAlign: "-moz-center",
@@ -64,10 +68,10 @@ const AcCard = ({ room }) => {
   const aircond = async () => {
     try {
       var path = `/things?room_id=${room}&type=ac`;
-      const res = await axios.get(path).then((res) => {
+      const res = await axios.get(path, head).then((res) => {
         setAcdata(res.data.result);
       });
-      setLoading(true);
+      setLoading(false)
       console.log(res);
       if (acdata[Object.keys(acdata)[0]] === undefined) {
         setAcexist(false);
@@ -97,7 +101,7 @@ const AcCard = ({ room }) => {
     console.log("Hello", id);
     acdata[id].sensors.state = event.target.checked;
     axios
-      .post(`/control?id=${event.target.name}`, acdata[id].sensors)
+      .post(`/control?id=${event.target.name}`, acdata[id].sensors, head)
       .then(() => (error) => {
         console.log(error);
       });
@@ -143,7 +147,7 @@ const AcCard = ({ room }) => {
     let id = ac_keys[0];
     acdata[id].sensors.fan = val;
     axios
-      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors)
+      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors, head)
       .then(() => (error) => {
         console.log(error);
       });
@@ -165,7 +169,7 @@ const AcCard = ({ room }) => {
     console.log(event.target.value);
     acdata[id].sensors.mode = event.target.value;
     axios
-      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors)
+      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors, head)
       .then(() => (error) => {
         console.log(error);
       });
@@ -187,7 +191,7 @@ const AcCard = ({ room }) => {
     console.log(event.target.value);
     acdata[id].sensors.swing = event.target.value;
     axios
-      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors)
+      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors, head)
       .then(() => (error) => {
         console.log(error);
       });

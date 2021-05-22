@@ -24,6 +24,11 @@ import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Remote from "@material-ui/icons/SettingsRemoteRounded";
+
+const head = {
+  headers: {'sessid': sessionStorage.getItem("sessid")}
+}
+
 const StyledButton = withStyles({
   root: {
     background: "#3f51b5",
@@ -169,9 +174,8 @@ const Topbar = () => {
     //axios function
     async function fetchdata() {
       // TODO change to actual path
-      const request = await axios.get("/rooms");
-      console.log(request.data);
-      setHm(request.data);
+      const request = await axios.get("/rooms",head);
+      setHm(request.data.result);
       setLoading(true);
       return request;
     }
@@ -186,14 +190,15 @@ const Topbar = () => {
   }, []);
 
   let newRoom = null;
-  let items = [];
-  for (const [k] of Object.entries(hm)) {
-    items.push(k);
-  }
+  /* 
+  TODO: change the room id to room name and when pass in
+  the value use the room id!!
+  */
+  const items = hm.map(a => a.room_id);
+  // console.log(items);
   newRoom = items.map((value, index) => {
     return <MenuItem value={value}>{value}</MenuItem>;
   });
-  console.log({ newRoom });
   return (
     <>
       {loading ? (
