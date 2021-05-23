@@ -12,16 +12,19 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+.App-body {
+  background-color: #eaedf3;
+}
 
 .App-header {
   background-color: #eaedf3;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  min-height: 95vh;
+  /* display: flex; */
+  /* flex-direction: column; */
   /* align-items: center;*/
   /* justify-content: center; */
   /* font-size: calc(10px + 2vmin); */
-  color: black;
+  /* color: black; */
 }
 
 .App-link {
@@ -37,14 +40,14 @@
   }
 }
 
-nav{
+nav {
   display: flex;
   min-height: 3vh;
   background: #3f51b5;
   color: white;
 }
 
-.nav-header{
+.nav-header {
   display: flex;
   justify-content: left;
   align-items: flex-start;
