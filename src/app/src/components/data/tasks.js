@@ -26,17 +26,17 @@ export const courses = [
 ];
 
 export const appointments = [
-  // {
-  //   course_id: "none",
-  //   reservation_id: "LOy85kzo",
-  //   username: "admin",
-  //   startDate: new Date(1621587600 * 1000),
-  //   endDate: new Date(1621598400 * 1000),
-  //   notes: "My Personal Meeting",
-  //   title: "Personal Meeting",
-  //   actions: [],
-  //   room_id: "hm_601",
-  // },
+  {
+    course_id: "none",
+    reservation_id: "LOy85kzo",
+    username: "admin",
+    startDate: new Date(1621587600 * 1000),
+    endDate: new Date(1621598400 * 1000),
+    notes: "My Personal Meeting",
+    title: "Personal Meeting",
+    actions: [],
+    room_id: "hm_601",
+  },
   {
     course_id: "none",
     id: "LOy85kzo",
