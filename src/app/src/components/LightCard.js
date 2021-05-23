@@ -4,13 +4,13 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import BulbIcon from "@material-ui/icons/WbIncandescentRounded";
-import useDidMountEffect from './useDidMountEffect';
+import useDidMountEffect from "./useDidMountEffect";
 import Switch from "@material-ui/core/Switch";
 import axios from "../axios";
 
 const head = {
-  headers: {'sessid': sessionStorage.getItem("sessid")}
-}
+  headers: { sessid: sessionStorage.getItem("sessid") },
+};
 
 const useStyles = makeStyles((theme) => ({
   first: {
@@ -37,7 +37,7 @@ const LightCard = ({ room }) => {
   const lights = async () => {
     try {
       var path = `/things?room_id=${room}&type=light`;
-      await axios.get(path,head).then((res) => {
+      await axios.get(path, head).then((res) => {
         setThings(res.data.result.things);
         // setSensors(things[Object.keys(things)].sensors.desired.state);
         console.log(things);
@@ -60,22 +60,26 @@ const LightCard = ({ room }) => {
         ...things[event.target.name], // gets all the previous values
         sensors: {
           ...things[event.target.name].sensors,
-          desired:{
+          desired: {
             state: temp,
-          }
+          },
         },
       },
     });
     let id = event.target.name;
   };
-  useDidMountEffect(()=>{
-      console.log( things[Object.keys(things)].sensors.desired.state);
-      axios
-        .post(`/control?thing_id=${Object.keys(things)}`, things[Object.keys(things)].sensors.desired, head)
-        .then(() => (error) => {
-          console.log(error);
-        });
-  },[things]);
+  useDidMountEffect(() => {
+    console.log(things[Object.keys(things)].sensors.desired.state);
+    axios
+      .post(
+        `/control?thing_id=${Object.keys(things)}`,
+        things[Object.keys(things)].sensors.desired,
+        head
+      )
+      .then(() => (error) => {
+        console.log(error);
+      });
+  }, [things]);
 
   const lights_keys = things[Object.keys(things)];
   // if (loading) {
@@ -85,7 +89,6 @@ const LightCard = ({ room }) => {
   return (
     <>
       {loading ? (
-        
         <Paper className={classes.first}>
           <br />
           <br />
@@ -93,14 +96,16 @@ const LightCard = ({ room }) => {
           <Grid item xs={12}>
             <Grid item xs container direction="row">
               <Grid item xs={6}>
-                {lights_keys.sensors.desired.state.length > 0 && lights_keys.sensors.desired.state[0] ? (
+                {lights_keys.sensors.desired.state.length > 0 &&
+                lights_keys.sensors.desired.state[0] ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
                 )}
               </Grid>
               <Grid item xs={6}>
-                {lights_keys.sensors.desired.state.length > 1 && lights_keys.sensors.desired.state[1] ? (
+                {lights_keys.sensors.desired.state.length > 1 &&
+                lights_keys.sensors.desired.state[1] ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
@@ -108,7 +113,9 @@ const LightCard = ({ room }) => {
               </Grid>
               <Grid item xs={6}>
                 <Switch
-                  disabled={lights_keys.sensors.desired.state.length > 0 ? false : true}
+                  disabled={
+                    lights_keys.sensors.desired.state.length > 0 ? false : true
+                  }
                   checked={
                     lights_keys.sensors.desired.state.length > 0
                       ? lights_keys.sensors.desired.state[0]
@@ -124,7 +131,9 @@ const LightCard = ({ room }) => {
               </Grid>
               <Grid item xs={6}>
                 <Switch
-                  disabled={lights_keys.sensors.desired.state.length > 1 ? false : true}
+                  disabled={
+                    lights_keys.sensors.desired.state.length > 1 ? false : true
+                  }
                   checked={
                     lights_keys.sensors.desired.state.length > 1
                       ? lights_keys.sensors.desired.state[1]
@@ -141,14 +150,16 @@ const LightCard = ({ room }) => {
             </Grid>
             <Grid item xs container direction="row">
               <Grid item xs={6}>
-                {lights_keys.sensors.desired.state.length > 2 && lights_keys.sensors.desired.state[2] ? (
+                {lights_keys.sensors.desired.state.length > 2 &&
+                lights_keys.sensors.desired.state[2] ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
                 )}
               </Grid>
               <Grid item xs={6}>
-                {lights_keys.sensors.desired.state.length > 3 && lights_keys.sensors.desired.state[3] ? (
+                {lights_keys.sensors.desired.state.length > 3 &&
+                lights_keys.sensors.desired.state[3] ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
@@ -156,7 +167,9 @@ const LightCard = ({ room }) => {
               </Grid>
               <Grid item xs={6}>
                 <Switch
-                  disabled={lights_keys.sensors.desired.state.length > 2 ? false : true}
+                  disabled={
+                    lights_keys.sensors.desired.state.length > 2 ? false : true
+                  }
                   checked={
                     lights_keys.sensors.desired.state.length > 2
                       ? lights_keys.sensors.desired.state[2]
@@ -172,7 +185,9 @@ const LightCard = ({ room }) => {
               </Grid>
               <Grid item xs={6}>
                 <Switch
-                  disabled={lights_keys.sensors.desired.state.length > 3 ? false : true}
+                  disabled={
+                    lights_keys.sensors.desired.state.length > 3 ? false : true
+                  }
                   checked={
                     lights_keys.sensors.desired.state.length > 3
                       ? lights_keys.sensors.desired.state[3]

@@ -26,8 +26,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Remote from "@material-ui/icons/SettingsRemoteRounded";
 
 const head = {
-  headers: {'sessid': sessionStorage.getItem("sessid")}
-}
+  headers: { sessid: sessionStorage.getItem("sessid") },
+};
 
 const StyledButton = withStyles({
   root: {
@@ -148,7 +148,7 @@ const Topbar = () => {
   const [loading, setLoading] = useState(false);
   const [selectedroom, setSelectedroom] = useState(false);
   const classes = useStyles();
-  
+
   const handleClickOpen2 = () => {
     setOpen2(true);
   };
@@ -177,7 +177,7 @@ const Topbar = () => {
     //axios function
     async function fetchdata() {
       // TODO change to actual path
-      const request = await axios.get("/rooms",head);
+      const request = await axios.get("/rooms", head);
       setHm(request.data.result);
       setLoading(true);
       return request;
@@ -197,23 +197,26 @@ const Topbar = () => {
   TODO: change the room id to room name and when pass in
   the value use the room id!!
   */
-  const room_n = hm.map(k => k.room_name);
-  const room_i = hm.map(k => k.room_id);
+  const room_n = hm.map((k) => k.room_name);
+  const room_i = hm.map((k) => k.room_id);
 
   // console.log("name", room_n);
   // console.log("id", room_i);
 
-  const zip = (a,b) => a.map((k,i)=>[k,b[i]]);
-  const room_tup = zip(room_i,room_n);
+  const zip = (a, b) => a.map((k, i) => [k, b[i]]);
+  const room_tup = zip(room_i, room_n);
   // console.log(room_tup);
 
   let key = [];
   let val = [];
 
-
   newRoom = room_tup.map((value, index) => {
     // console.log(value)
-    return <MenuItem onClick={handleClose} value={value}>{value[1]}</MenuItem>;
+    return (
+      <MenuItem onClick={handleClose} value={value}>
+        {value[1]}
+      </MenuItem>
+    );
   });
   // console.log(newRoom)
   return (
