@@ -19,7 +19,7 @@ function Schedule() {
       <div className="App-header">
         <Grid container spacing={2} className={classes.parentPaper}>
           <Topbar />
-          <SchedulerCard />
+          {/* <SchedulerCard /> */}
         </Grid>
       </div>
       {/* <div className="App-header"></div> */}

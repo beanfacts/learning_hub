@@ -52,11 +52,15 @@ const head = {
 };
 
 const SchedulerCard = ({ room }) => {
-  room = "hm_601";
+  // room = "hm_601";
+  // console.log(room);
   const currentDate1 = moment();
   const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [roomExist, setRoomExist] = useState(false);
+  if (room === "") {
+    console.log("ROOMNULL");
+  }
   /* getting the data from api */
   const getSchedule = async () => {
     try {
@@ -73,10 +77,10 @@ const SchedulerCard = ({ room }) => {
       console.log(e);
     }
   };
+
   useEffect(() => {
     getSchedule();
-  }, []);
-
+  }, [room, loading, schedule]); //I don't know why but it works!!!
   const result = schedule.map((apmnt) => ({
     course_id: apmnt.course_id,
     id: apmnt.reservation_id,
@@ -92,7 +96,7 @@ const SchedulerCard = ({ room }) => {
 
   useEffect(() => {
     setData(result);
-  }, [loading]);
+  }, [schedule]);
   const [teacher, setTeacher] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [currentDate, setCurrentDate] = useState(currentDate1);
@@ -217,7 +221,7 @@ const SchedulerCard = ({ room }) => {
     setAddedAppointment(appointment);
     setIsAppointmentBeingCreated(true);
   });
-  // console.log(data);
+  console.log(data);
 
   const TimeTableCell = useCallback(
     memo(({ onDoubleClick, ...restProps }) => (
