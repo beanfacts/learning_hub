@@ -148,7 +148,7 @@ const Topbar = () => {
   const [loading, setLoading] = useState(false);
   const [selectedroom, setSelectedroom] = useState(false);
   const classes = useStyles();
-
+  
   const handleClickOpen2 = () => {
     setOpen2(true);
   };
@@ -160,7 +160,7 @@ const Topbar = () => {
   const updateRoom = (event) => {
     setRoom(event.target.value[0]);
     setRoomName(event.target.value[1]);
-    // console.log(event.target.value[1]);
+    console.log(event.target.value[1]);
     setSelectedroom(true);
   };
 
@@ -213,7 +213,7 @@ const Topbar = () => {
 
   newRoom = room_tup.map((value, index) => {
     // console.log(value)
-    return <MenuItem value={value}>{value[1]}</MenuItem>;
+    return <MenuItem onClick={handleClose} value={value}>{value[1]}</MenuItem>;
   });
   // console.log(newRoom)
   return (
@@ -258,7 +258,6 @@ const Topbar = () => {
                       <Select
                         labelId="room-select"
                         id="room-select"
-                        displayEmpty={true}
                         value={room}
                         onChange={updateRoom}
                         input={<Input />}
