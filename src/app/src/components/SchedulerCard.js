@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect, useState, memo } from "react";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
 import axios from "../axios";
 import moment from "moment";
 
@@ -20,18 +23,44 @@ import {
   Resources,
   DateNavigator,
 } from "@devexpress/dx-react-scheduler-material-ui";
-import { owners, appointments } from "../components/data/tasks";
+import { courses, appointments } from "../components/data/tasks";
+
+const useStyles = makeStyles((theme) => ({
+  first: {
+    padding: theme.spacing(4),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+    height: "90%",
+  },
+  BulbIcon: {
+    fontSize: "7rem",
+    color: "#b2b2b2",
+  },
+  BulbIconLit: {
+    fontSize: "7rem",
+    color: "#ffde3b",
+  },
+}));
+
+const head = {
+  headers: { sessid: sessionStorage.getItem("sessid") },
+};
 
 const SchedulerCard = ({ room }) => {
   const currentDate1 = moment();
-  const [things, setThings] = useState([]);
+  const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(false);
-  /* getting the data from api
-  const schedule = async () => {
+
+  /* getting the data from api */
+  const getSchedule = async () => {
     try {
-      var path = `/things?room_id=${room}&type=light`;
-      await axios.get(path).then((res) => {
-        setThings(res.data.result);
+      const datePast = moment().subtract(7, "d").unix();
+      const dateFuture = moment().add(7, "d").unix();
+      // console.log(dateFuture, datePast);
+      var path = `/schedule?room_id=hm_601&start_time=${datePast}&end_time=${dateFuture}`;
+      await axios.get(path, head).then((res) => {
+        setSchedule(res.data.result);
+        console.log(res.data.result);
       });
       setLoading(true);
     } catch (e) {
@@ -39,16 +68,25 @@ const SchedulerCard = ({ room }) => {
     }
   };
   useEffect(() => {
-    schedule();
+    getSchedule();
   }, []);
-*/
 
+  const result = schedule.map((apmnt) => ({
+    course_id: apmnt.course_id,
+    id: apmnt.reservation_id,
+    user: apmnt.username,
+    startDate: new Date(apmnt.start_time * 1000),
+    endDate: new Date(apmnt.end_time * 1000),
+    notes: apmnt.description,
+    room_id: apmnt.room_id,
+    title: apmnt.title,
+  }));
   /* sending the data back
   const handleChange = (event) => {
-    setThings({
-      ...things,
+    setSchedule({
+      ...schedule,
       [event.target.name]: {
-        ...things[event.target.name], // gets all the previous values
+        ...schedule[event.target.name], // gets all the previous values
         sensors: {
           state: event.target.checked,
         },
@@ -56,9 +94,9 @@ const SchedulerCard = ({ room }) => {
     });
     let id = event.target.name;
     console.log(event.target.name);
-    things[id].sensors.state = event.target.checked;
+    schedule[id].sensors.state = event.target.checked;
     axios
-      .post(`/control?id=${event.target.name}`, things[id].sensors)
+      .post(`/control?id=${event.target.name}`, schedule[id].sensors, head)
       .then(() => (error) => {
         console.log(error);
       });
@@ -81,9 +119,9 @@ const SchedulerCard = ({ room }) => {
 
   const resources = [
     {
-      fieldName: "ownerId",
-      title: "Owners",
-      instances: owners,
+      fieldName: "course_id",
+      title: "Course",
+      instances: courses,
     },
   ];
 
@@ -123,7 +161,7 @@ const SchedulerCard = ({ room }) => {
     setAddedAppointment(appointment);
     setIsAppointmentBeingCreated(true);
   });
-  console.log(data);
+  console.log(result);
   const TimeTableCell = useCallback(
     memo(({ onDoubleClick, ...restProps }) => (
       <WeekView.TimeTableCell
@@ -159,37 +197,51 @@ const SchedulerCard = ({ room }) => {
     () => allowResizing && allowUpdating,
     [allowResizing, allowUpdating]
   );
-
+  const classes = useStyles();
   return (
-    <React.Fragment>
-      <Paper>
-        <Scheduler data={data} height={800}>
-          <ViewState defaultCurrentDate={currentDate} />
-          <EditingState
-            onCommitChanges={onCommitChanges}
-            addedAppointment={addedAppointment}
-            onAddedAppointmentChange={onAddedAppointmentChange}
-          />
-          <IntegratedEditing />
-          <WeekView
-            startDayHour={9}
-            endDayHour={19}
-            timeTableCellComponent={TimeTableCell}
-          />
-          <Toolbar />
-          <DateNavigator />
-          <TodayButton />
-          <Appointments />
-          <Resources data={resources} mainResourceName="ownerId" />
-          <AppointmentTooltip showOpenButton showDeleteButton={allowDeleting} />
-          <AppointmentForm
-            commandButtonComponent={CommandButton}
-            readOnly={isAppointmentBeingCreated ? false : !allowUpdating}
-          />
-          <DragDropProvider allowDrag={allowDrag} allowResize={allowResize} />
-        </Scheduler>
-      </Paper>
-    </React.Fragment>
+    <>
+      {loading ? (
+        <React.Fragment>
+          <Paper>
+            <Scheduler data={data} height={"auto"}>
+              <ViewState defaultCurrentDate={currentDate} />
+              <EditingState
+                onCommitChanges={onCommitChanges}
+                addedAppointment={addedAppointment}
+                onAddedAppointmentChange={onAddedAppointmentChange}
+              />
+              <IntegratedEditing />
+              <WeekView
+                startDayHour={9}
+                endDayHour={19}
+                timeTableCellComponent={TimeTableCell}
+              />
+              <Toolbar />
+              <DateNavigator />
+              <TodayButton />
+              <Appointments />
+              <Resources data={resources} mainResourceName="course_id" />
+              <AppointmentTooltip
+                showOpenButton
+                showDeleteButton={allowDeleting}
+              />
+              <AppointmentForm
+                commandButtonComponent={CommandButton}
+                readOnly={isAppointmentBeingCreated ? false : !allowUpdating}
+              />
+              <DragDropProvider
+                allowDrag={allowDrag}
+                allowResize={allowResize}
+              />
+            </Scheduler>
+          </Paper>
+        </React.Fragment>
+      ) : (
+        <div className={classes.first}>
+          <CircularProgress />
+        </div>
+      )}
+    </>
   );
 };
 
