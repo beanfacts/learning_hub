@@ -195,7 +195,8 @@ const Topbar = () => {
   the value use the room id!!
   */
   const items = hm.map(a => a.room_id);
-  // console.log(items);
+  console.log("ITEMS",items);
+  console.log("HM",hm)
   newRoom = items.map((value, index) => {
     return <MenuItem value={value}>{value}</MenuItem>;
   });
