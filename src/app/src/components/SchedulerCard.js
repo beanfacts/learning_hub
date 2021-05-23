@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState, memo } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
+import MuiAlert from "@material-ui/lab/Alert";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
+import Snackbar from "@material-ui/core/Snackbar";
 import axios from "../axios";
 import moment from "moment";
 
@@ -24,6 +25,10 @@ import {
   DateNavigator,
 } from "@devexpress/dx-react-scheduler-material-ui";
 import { courses, appointments } from "../components/data/tasks";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles((theme) => ({
   first: {
@@ -82,35 +87,14 @@ const SchedulerCard = ({ room }) => {
     room_id: apmnt.room_id,
     title: apmnt.title,
   }));
-  /* sending the data back
-  const handleChange = (event) => {
-    setSchedule({
-      ...schedule,
-      [event.target.name]: {
-        ...schedule[event.target.name], // gets all the previous values
-        sensors: {
-          state: event.target.checked,
-        },
-      },
-    });
-    let id = event.target.name;
-    console.log(event.target.name);
-    schedule[id].sensors.state = event.target.checked;
-    axios
-      .post(`/control?id=${event.target.name}`, schedule[id].sensors, head)
-      .then(() => (error) => {
-        console.log(error);
-      });
-  };
-*/
-  // const [test, setTest] = useState(result);
+
   const [data, setData] = useState([]);
 
   useEffect(() => {
     setData(result);
   }, [loading]);
   const [teacher, setTeacher] = useState(true);
-
+  const [open, setOpen] = React.useState(false);
   const [currentDate, setCurrentDate] = useState(currentDate1);
   const [editingOptions, setEditingOptions] = useState({
     allowAdding: teacher,
@@ -142,10 +126,10 @@ const SchedulerCard = ({ room }) => {
   const onCommitChanges = useCallback(
     ({ added, changed, deleted }) => {
       if (added) {
-        const startingAddedId =
-          data.length > 0 ? data[data.length - 1].id + 1 : 0;
-        setData([...data, { id: startingAddedId, ...added }]);
+        const r = Math.random().toString(36).substring(7);
+        const startingAddedId = data.length > 0 ? r : 0;
         const temp = { id: startingAddedId, ...added };
+
         const reply = {
           course_id: temp.course_id,
           reservation_id: temp.id,
@@ -155,19 +139,17 @@ const SchedulerCard = ({ room }) => {
           room_id: room,
           title: temp.title,
         };
-        // axios.post(`/schedule`, reply, head).then(() => (error) => {
-        //   console.log(error);
-        // });
-        console.log(reply, temp);
+        axios
+          .post(`/schedule`, reply, head)
+          .then((response) => {
+            setData([...data, { id: startingAddedId, ...added }]);
+          })
+          .catch((err) => {
+            console.log(err);
+            setOpen(true);
+          });
       }
       if (changed) {
-        setData(
-          data.map((appointment) =>
-            changed[appointment.id]
-              ? { ...appointment, ...changed[appointment.id] }
-              : appointment
-          )
-        );
         data.map((appointment) => {
           if (changed[appointment.id]) {
             const temp = { ...appointment, ...changed[appointment.id] };
@@ -181,17 +163,41 @@ const SchedulerCard = ({ room }) => {
               room_id: room,
               title: temp.title,
             };
-            axios.patch(`/schedule`, reply, head).then(() => (error) => {
-              console.log(error);
-            });
-            // const temp = { ...appointment, ...changed[appointment.id] }))
-            // appointment
+            axios
+              .patch(`/schedule`, reply, head)
+              .then((response) => {
+                setData(
+                  data.map((appointment) =>
+                    changed[appointment.id]
+                      ? { ...appointment, ...changed[appointment.id] }
+                      : appointment
+                  )
+                );
+              })
+              .catch((err) => {
+                setOpen(true);
+              });
           }
         });
-        // console.log(temp);
       }
       if (deleted !== undefined) {
-        setData(data.filter((appointment) => appointment.id !== deleted));
+        const temp = data.filter((appointment) => appointment.id === deleted);
+        const reply = {
+          reservation_id: temp[0].id,
+          room_id: room,
+        };
+        axios
+          .delete(
+            `/schedule?room_id=${reply.room_id}&reservation_id=${reply.reservation_id}`,
+            head
+          )
+          .then(() => {
+            setData(data.filter((appointment) => appointment.id !== deleted));
+          })
+          .catch((err) => {
+            setOpen(true);
+          });
+        console.log(reply);
       }
       setIsAppointmentBeingCreated(false);
 
@@ -199,6 +205,13 @@ const SchedulerCard = ({ room }) => {
     },
     [setData, setIsAppointmentBeingCreated, data]
   );
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
 
   const onAddedAppointmentChange = useCallback((appointment) => {
     setAddedAppointment(appointment);
@@ -278,6 +291,11 @@ const SchedulerCard = ({ room }) => {
                 allowResize={allowResize}
               />
             </Scheduler>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity="error">
+                Access Denied
+              </Alert>
+            </Snackbar>
           </Paper>
         </React.Fragment>
       ) : (
