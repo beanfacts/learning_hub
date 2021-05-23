@@ -47,6 +47,7 @@ const head = {
 };
 
 const SchedulerCard = ({ room }) => {
+  room = "hm_601";
   const currentDate1 = moment();
   const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -57,7 +58,7 @@ const SchedulerCard = ({ room }) => {
       const datePast = moment().subtract(7, "d").unix();
       const dateFuture = moment().add(7, "d").unix();
       // console.log(dateFuture, datePast);
-      var path = `/schedule?room_id=hm_601&start_time=${datePast}&end_time=${dateFuture}`;
+      var path = `/schedule?room_id=${room}&start_time=${datePast}&end_time=${dateFuture}`;
       await axios.get(path, head).then((res) => {
         setSchedule(res.data.result);
         console.log(res.data.result);
@@ -103,12 +104,11 @@ const SchedulerCard = ({ room }) => {
   };
 */
   // const [test, setTest] = useState(result);
-  const [data, setData] = useState(result);
-  // setLoading(false);
+  const [data, setData] = useState([]);
+
   useEffect(() => {
     setData(result);
   }, [loading]);
-
   const [teacher, setTeacher] = useState(true);
 
   const [currentDate, setCurrentDate] = useState(currentDate1);
@@ -145,6 +145,20 @@ const SchedulerCard = ({ room }) => {
         const startingAddedId =
           data.length > 0 ? data[data.length - 1].id + 1 : 0;
         setData([...data, { id: startingAddedId, ...added }]);
+        const temp = { id: startingAddedId, ...added };
+        const reply = {
+          course_id: temp.course_id,
+          reservation_id: temp.id,
+          start_time: new Date(temp.startDate).getTime() / 1000,
+          end_time: new Date(temp.endDate).getTime() / 1000,
+          description: temp.notes,
+          room_id: room,
+          title: temp.title,
+        };
+        // axios.post(`/schedule`, reply, head).then(() => (error) => {
+        //   console.log(error);
+        // });
+        console.log(reply, temp);
       }
       if (changed) {
         setData(
@@ -154,11 +168,34 @@ const SchedulerCard = ({ room }) => {
               : appointment
           )
         );
+        data.map((appointment) => {
+          if (changed[appointment.id]) {
+            const temp = { ...appointment, ...changed[appointment.id] };
+            console.log(temp);
+            const reply = {
+              course_id: temp.course_id,
+              reservation_id: temp.id,
+              start_time: new Date(temp.startDate).getTime() / 1000,
+              end_time: new Date(temp.endDate).getTime() / 1000,
+              description: temp.notes,
+              room_id: room,
+              title: temp.title,
+            };
+            axios.patch(`/schedule`, reply, head).then(() => (error) => {
+              console.log(error);
+            });
+            // const temp = { ...appointment, ...changed[appointment.id] }))
+            // appointment
+          }
+        });
+        // console.log(temp);
       }
       if (deleted !== undefined) {
         setData(data.filter((appointment) => appointment.id !== deleted));
       }
       setIsAppointmentBeingCreated(false);
+
+      // console.log(reply);
     },
     [setData, setIsAppointmentBeingCreated, data]
   );
@@ -167,7 +204,7 @@ const SchedulerCard = ({ room }) => {
     setAddedAppointment(appointment);
     setIsAppointmentBeingCreated(true);
   });
-  console.log(data);
+  // console.log(data);
 
   const TimeTableCell = useCallback(
     memo(({ onDoubleClick, ...restProps }) => (
@@ -227,7 +264,7 @@ const SchedulerCard = ({ room }) => {
               <DateNavigator />
               <TodayButton />
               <Appointments />
-              <Resources data={resources} mainResourceName="course_id" />
+              {/* <Resources data={resources} mainResourceName="course_id" /> */}
               <AppointmentTooltip
                 showOpenButton
                 showDeleteButton={allowDeleting}
