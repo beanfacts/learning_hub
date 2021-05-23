@@ -53,3 +53,11 @@ nav {
   align-items: flex-start;
   list-style: none;
 }
+
+.nav-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  list-style: none;
+}
