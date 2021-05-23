@@ -102,7 +102,13 @@ const SchedulerCard = ({ room }) => {
       });
   };
 */
-  const [data, setData] = useState(appointments);
+  // const [test, setTest] = useState(result);
+  const [data, setData] = useState(result);
+  // setLoading(false);
+  useEffect(() => {
+    setData(result);
+  }, [loading]);
+
   const [teacher, setTeacher] = useState(true);
 
   const [currentDate, setCurrentDate] = useState(currentDate1);
@@ -161,7 +167,8 @@ const SchedulerCard = ({ room }) => {
     setAddedAppointment(appointment);
     setIsAppointmentBeingCreated(true);
   });
-  console.log(result);
+  console.log(data);
+
   const TimeTableCell = useCallback(
     memo(({ onDoubleClick, ...restProps }) => (
       <WeekView.TimeTableCell
