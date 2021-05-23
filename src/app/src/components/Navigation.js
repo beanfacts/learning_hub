@@ -95,7 +95,7 @@ function Navigation() {
     
     <nav>
       <Grid container className={classes.root}>
-        <Grid xs={8} style={{flexGrow: "1"}} className={classes.fixedWidthContainer}>
+        <Grid xs={10} style={{flexGrow: "1"}} className={classes.fixedWidthContainer}>
           <ul className="nav-header">
             <li>
               <Typography 
@@ -108,14 +108,14 @@ function Navigation() {
             </li>
           </ul>
         </Grid>
-        <Grid xs={2} item className={classes.fixedWidthContainer}>
+        {/* <Grid xs={2} item className={classes.fixedWidthContainer}>
           <ul>
             <StyledButton
               onClick={handlePath}>
                 Check Path
             </StyledButton>
           </ul>
-        </Grid>
+        </Grid> */}
         {/* {allow?(
           <Grid xs={2} item className={classes.fixedWidthContainer}>
             <ul>
