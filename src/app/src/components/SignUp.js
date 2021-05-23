@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,6 +10,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import { StepContent } from '@material-ui/core';
 
 function Copyright() {
   return (
@@ -26,7 +30,7 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(8), 
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -35,17 +39,46 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
+  StyledStepper : {
+    backgroundColor : '#FAFAFA',
+  },
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(5), //space for the tab
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  root: {
+    width: '100%',
+  },
+  button: {
+    marginRight: theme.spacing(1),
+  },
+  backButton: {
+    marginRight: theme.spacing(1),
+  },
+  completed: {
+    display: 'inline-block',
+  },
+  instructions: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
 }));
+
 
 export default function SignUp() {
   const classes = useStyles();
+  const [activeStep, setActiveStep] = React.useState(0)
+  const  nextStep= () =>{
+    if (activeStep < 3){
+      setActiveStep((currentStep) => currentStep +1) //increasing the step
+    }
+   
+  }
+  
+
 
   return (
     <Container component="main" maxWidth="xs">
@@ -57,8 +90,25 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
+        <div>
+        <Stepper activeStep={activeStep} className = {classes.StyledStepper}>
+          <Step>
+            <StepLabel>Signup</StepLabel>
+          </Step>
+          <Step>
+            <StepLabel>Fingerprint</StepLabel>
+          </Step>
+          <Step>
+            <StepLabel>Complete</StepLabel>
+          </Step>
+        </Stepper>
+        </div>
+
+
         <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
+          {
+            (activeStep === 0) ? ///////////////first step and make it dissappear
+            <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
@@ -116,13 +166,13 @@ export default function SignUp() {
                 autoComplete="current-password"
               />
             </Grid>
-          </Grid>
-          <Button
-            type="submit"
+            <Button
+            //type = "submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick = {() => nextStep()}
           >
             Sign Up
           </Button>
@@ -133,6 +183,51 @@ export default function SignUp() {
               </Link>
             </Grid>
           </Grid>
+          </Grid>
+          : <div></div>
+          }
+          {
+            (activeStep === 1) ? ///////////////register step
+            <div>
+            <Typography className={classes.instructions}>
+              please press the button
+            </Typography>
+
+            <Button
+            //type = "submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick = {() => nextStep()}
+          >
+            RegisterFinger
+          </Button>
+          </div>
+          : <div></div>
+          }
+          {
+            (activeStep === 2) ? //////////////complete
+            <div>
+              <Typography className={classes.instructions}>
+              All steps are completed
+            </Typography>
+            
+            <Button
+            //type = "submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick = {() => setActiveStep(0)}
+          >
+            DONE
+          </Button>
+          </div>
+          : <div></div>
+          }
+
+
         </form>
       </div>
       <Box mt={5}>
