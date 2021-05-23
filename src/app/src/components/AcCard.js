@@ -104,7 +104,7 @@ const AcCard = ({ room }) => {
         },
       },
     });
-    // console.log(checked)
+    console.log(event.target.checked)
     // console.log("REPORTED", acdata[ac].sensors.reported.state)
     acdata[ac_name].sensors.desired.state = Number(event.target.checked);
     axios
@@ -240,6 +240,7 @@ const AcCard = ({ room }) => {
           </Grid>
           <Grid item xs={12} className={classes.center}>
             <Switch
+              value={acdata[ac_name].sensors.desired.state}
               checked={acdata[ac_name].sensors.desired.state}
               onChange={handleChange}
               color="primary"
@@ -262,7 +263,7 @@ const AcCard = ({ room }) => {
                   : acdata[ac_name].sensors.desired.temp
               }
               onChange={handleTempChange(ac_name)}
-              // disabled={acdata[ac].sensors.state ? false : true}
+              disabled={acdata[ac_name].sensors.state ? false : true}
             />
           </Grid>
           <Grid item xs={12}>
@@ -271,7 +272,7 @@ const AcCard = ({ room }) => {
               size="medium"
               color="primary"
               aria-label="large outlined primary button group"
-              //disabled={acdata.brightAc.sensors.state ? false : true}
+              disabled={acdata[ac_name].sensors.state ? false : true}
             >
               <Button
               onClick={() => {
@@ -313,7 +314,7 @@ const AcCard = ({ room }) => {
                   id="mode-select"
                   value={acdata[ac_name].sensors.desired.mode}
                   onChange={handleModeChange}
-                  //disabled={acdata.brightAc.sensors.state ? false : true}
+                  disabled={acdata[ac_name].sensors.state ? false : true}
                 >
                   <MenuItem value={"auto"}>Auto</MenuItem>
                   <MenuItem value={"heat"}>Heat</MenuItem>
@@ -331,7 +332,7 @@ const AcCard = ({ room }) => {
                   id="demo-simple-select"
                   value={acdata[ac_name].sensors.desired.swing}
                   onChange={handleSwingChange}
-                  //disabled={acdata[ac].sensors.state ? false : true}
+                  disabled={acdata[ac_name].sensors.state ? false : true}
                 >
                   <MenuItem value={"auto"}>Auto</MenuItem>
                   <MenuItem value={"up"}>Up</MenuItem>
