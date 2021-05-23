@@ -142,12 +142,13 @@ const DialogActions = withStyles((theme) => ({
 
 const Topbar = () => {
   const [room, setRoom] = useState(["None"]);
+  const [roomName, setRoomName] = useState(["None"]);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedroom, setSelectedroom] = useState(false);
   const classes = useStyles();
-
+  
   const handleClickOpen2 = () => {
     setOpen2(true);
   };
@@ -157,7 +158,9 @@ const Topbar = () => {
   };
 
   const updateRoom = (event) => {
-    setRoom(event.target.value);
+    setRoom(event.target.value[0]);
+    setRoomName(event.target.value[1]);
+    console.log(event.target.value[1]);
     setSelectedroom(true);
   };
 
@@ -194,11 +197,25 @@ const Topbar = () => {
   TODO: change the room id to room name and when pass in
   the value use the room id!!
   */
-  const items = hm.map(a => a.room_id);
-  // console.log(items);
-  newRoom = items.map((value, index) => {
-    return <MenuItem value={value}>{value}</MenuItem>;
+  const room_n = hm.map(k => k.room_name);
+  const room_i = hm.map(k => k.room_id);
+
+  // console.log("name", room_n);
+  // console.log("id", room_i);
+
+  const zip = (a,b) => a.map((k,i)=>[k,b[i]]);
+  const room_tup = zip(room_i,room_n);
+  // console.log(room_tup);
+
+  let key = [];
+  let val = [];
+
+
+  newRoom = room_tup.map((value, index) => {
+    // console.log(value)
+    return <MenuItem onClick={handleClose} value={value}>{value[1]}</MenuItem>;
   });
+  // console.log(newRoom)
   return (
     <>
       {loading ? (
@@ -218,7 +235,7 @@ const Topbar = () => {
                 bgcolor="white"
                 className={classes.selectedValueDisplay}
               >
-                {room}
+                {roomName}
               </Box>
             </div>
           </Grid>
