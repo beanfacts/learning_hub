@@ -16,8 +16,8 @@ import axios from "../axios";
 import React, { useEffect, useState } from "react";
 
 const head = {
-  headers: {"sessid": sessionStorage.getItem("sessid")}
-}
+  headers: { sessid: sessionStorage.getItem("sessid") },
+};
 
 const useStyles = makeStyles((theme) => ({
   center: {
@@ -64,19 +64,15 @@ const AcCard = ({ room }) => {
   const [acdata, setAcdata] = useState({});
   const [acexist, setAcexist] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [haveData, setHaveData] = useState(false);
   const aircond = async () => {
     try {
       var path = `/things?room_id=${room}&type=ac`;
-      const res = await axios.get(path,head).then((res) => {
+      const res = await axios.get(path, head).then((res) => {
         setAcdata(res.data.result.things);
-        if(acdata!=null){
-          setHaveData(true);
-        }
         console.log("STATE", res.data.result.things);
-        console.log("ACDATA", acdata.brightAc)
+        console.log("ACDATA", acdata.brightAc);
       });
-      setLoading(true)
+      setLoading(true);
       // console.log(res.data);
       if (acdata[Object.keys(acdata)[0]] === undefined) {
         setAcexist(false);
@@ -89,47 +85,28 @@ const AcCard = ({ room }) => {
   // console.log("KEY", key)
   useEffect(() => {
     aircond();
-
-  },[haveData]);
+  }, []);
 
   // handle state change - on/off
   const handleChange = (event) => {
     setAcdata({
-      ...acdata.brightAc.sensors,
-      reported:{
-        state: event.target.checked
-      }
-      // ...acdata.things.brightAc.sensors,
-      // sensors:{
-      //   ...acdata.things.brightAc.sensors.reported,
-      //   reported:{
-      //     state: event.target.checked
-      //   },
-      // },
-      // ...acdata,
-      // things: {
-      //   ...acdata.things,
-      //   brightAc: {
-      //     ...acdata.things.brightAc,
-      //     sensors: {
-      //       ...acdata.things.brightAc.sensors,
-      //       reported: {
-      //         state: 1
-      //       }
-      //     }
-      //   }
-      // }
-      // [event.target.name]: {
-      //   ...acdata[event.target.name].things.brightAc.sensors,
-      //   reported: {
-      //     ...acdata[event.target.name].things.brightAc.sensors.reported,
-      //     state: event.target.checked,
-      //   },
-      // },
+      ...acdata,
+      [ac]: {
+        ...acdata[ac],
+        sensors: {
+          ...acdata[ac].sensors,
+          reported: {
+            ...acdata[ac].sensors.reported,
+            state: Number(event.target.checked),
+          },
+        },
+      },
     });
-    acdata.brightAc.sensors.reported.state = event.target.checked;
+    console.log("DESIRE",acdata[ac].sensors.desired.state);
+    console.log("REPORTED", acdata[ac].sensors.reported.state)
+    // acdata.brightAc.sensors.reported.state = event.target.checked;
     axios
-      .post(`/control?thing_id=brightAc`, acdata.brightAc.sensors.reported.state, head)
+      .post(`/control?thing_id=brightAc`, acdata[ac].sensors.reported, head)
       .then(() => (error) => {
         console.log(error);
       });
@@ -217,19 +194,22 @@ const AcCard = ({ room }) => {
   //       console.log(error);
   //     });
   // };
+  // console.log(acdata);
+  const ac = Object.keys(acdata)[0];
+  // console.log(typeof ac)
   return (
     <>
       {loading ? (
         <Paper className={classes.first}>
           <Grid item xs={12}>
             <h1 className={classes.fonts}>
-              {acdata.brightAc.sensors.reported.temp}
+              {acdata[ac].sensors.reported.temp}
               °C
             </h1>
           </Grid>
           <Grid item xs={12} className={classes.center}>
             <Switch
-              checked={acdata.brightAc.sensors.reported.state}
+              checked={acdata[ac].sensors.reported.state}
               onChange={handleChange}
               color="primary"
               inputProps={{
@@ -263,30 +243,30 @@ const AcCard = ({ room }) => {
               disabled={acdata.brightAc.sensors.state ? false : true}
             >
               <Button
-                // onClick={() => {
-                //   handleFanChange(0);
-                // }}
+              // onClick={() => {
+              //   handleFanChange(0);
+              // }}
               >
                 Auto
               </Button>
               <Button
-                // onClick={() => {
-                //   handleFanChange(1);
-                // }}
+              // onClick={() => {
+              //   handleFanChange(1);
+              // }}
               >
                 Low
               </Button>
               <Button
-                // onClick={() => {
-                //   handleFanChange(2);
-                // }}
+              // onClick={() => {
+              //   handleFanChange(2);
+              // }}
               >
                 Mid
               </Button>
               <Button
-                // onClick={() => {
-                //   handleFanChange(3);
-                // }}
+              // onClick={() => {
+              //   handleFanChange(3);
+              // }}
               >
                 High
               </Button>
