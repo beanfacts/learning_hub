@@ -13,7 +13,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import { StepContent } from '@material-ui/core';
+
+
 
 function Copyright() {
   return (
@@ -27,6 +28,7 @@ function Copyright() {
     </Typography>
   );
 }
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -69,14 +71,29 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function SignUp() {
+  
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const [passWord, setPassWord] = useState('');
+  const [ConpassWord, setConPassWord] = useState('');
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0)
   const  nextStep= () =>{
-    if (activeStep < 3){
+    if (activeStep < 3 && 
+      firstName && lastName && email && userName && passWord === ConpassWord
+
+      ){
       setActiveStep((currentStep) => currentStep +1) //increasing the step
     }
+    if (ConpassWord !== passWord){
+      alert('your password is not match')
+    }
+
    
   }
+  // console.log({firstName})
   
 
 
@@ -105,7 +122,7 @@ export default function SignUp() {
         </div>
 
 
-        <form className={classes.form} noValidate>
+        <form className={classes.form}  >
           {
             (activeStep === 0) ? ///////////////first step and make it dissappear
             <Grid container spacing={2}>
@@ -119,8 +136,12 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                onChange={e => setFirstName(e.target.value)}
+                
+                
               />
             </Grid>
+            {/* <h3>{firstName}</h3> */}
             <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
@@ -130,6 +151,7 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                onChange={e => setLastName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -141,6 +163,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={e => setEmail(e.target.value)}h
               />
             </Grid>
             <Grid item xs={12}>
@@ -152,6 +175,7 @@ export default function SignUp() {
                 label="Username"
                 name="username"
                 autoComplete="username"
+                onChange={e => setUserName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -164,10 +188,24 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={e => setPassWord(e.target.value)}
+              />
+              </Grid>
+              <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="Conpass"
+                type="password"
+                label="Confirm Password"
+                name="Conpass"
+                autoComplete="Conpass"
+                onChange={e => setConPassWord(e.target.value)}
               />
             </Grid>
             <Button
-            //type = "submit"
+            type = "submit"
             fullWidth
             variant="contained"
             color="primary"
@@ -194,7 +232,7 @@ export default function SignUp() {
             </Typography>
 
             <Button
-            //type = "submit"
+            type = "submit"
             fullWidth
             variant="contained"
             color="primary"
@@ -214,7 +252,7 @@ export default function SignUp() {
             </Typography>
             
             <Button
-            //type = "submit"
+            type = "submit"
             fullWidth
             variant="contained"
             color="primary"
