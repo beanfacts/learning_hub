@@ -71,7 +71,7 @@ const AcCard = ({ room }) => {
       const res = await axios.get(path, head).then((res) => {
         setAcdata(res.data.result.things);
         console.log("STATE", res.data.result.things);
-        console.log("ACDATA", acdata[ac]);
+        console.log("ACDATA", acdata[ac_name]);
       });
       setLoading(true);
       // console.log(res.data);
@@ -93,12 +93,12 @@ const AcCard = ({ room }) => {
     // setChecked((prev)=>!prev);
     setAcdata({
       ...acdata,
-      [ac]: {
-        ...acdata[ac],
+      [ac_name]: {
+        ...acdata[ac_name],
         sensors: {
-          ...acdata[ac].sensors,
+          ...acdata[ac_name].sensors,
           desired: {
-            ...acdata[ac].sensors.desired,
+            ...acdata[ac_name].sensors.desired,
             state: Number(event.target.checked),
           },
         },
@@ -106,9 +106,9 @@ const AcCard = ({ room }) => {
     });
     // console.log(checked)
     // console.log("REPORTED", acdata[ac].sensors.reported.state)
-    acdata[ac].sensors.desired.state = Number(event.target.checked);
+    acdata[ac_name].sensors.desired.state = Number(event.target.checked);
     axios
-      .post(`/control?thing_id=${ac}`, acdata[ac].sensors.desired, head)
+      .post(`/control?thing_id=${ac_name}`, acdata[ac_name].sensors.desired, head)
       .then(() => (error) => {
         console.log(error);
       })
@@ -118,23 +118,23 @@ const AcCard = ({ room }) => {
   };
 
   // handle temp change
-  const handleTempChange = (name) => (e, data) => {
+  const handleTempChange = (ac_name) => (e, data) => {
     setAcdata({
       ...acdata,
-      [name]:{
-        ...acdata[name],
+      [ac_name]:{
+        ...acdata[ac_name],
         sensors:{
-          ...acdata[name].sensors,
+          ...acdata[ac_name].sensors,
           desired: {
-            ...acdata[name].sensors.desired,
+            ...acdata[ac_name].sensors.desired,
             temp: data,
           }
         }
       }
     })
-    acdata[ac].sensors.desired.temp = data;
+    acdata[ac_name].sensors.desired.temp = data;
     axios
-      .post(`/control?thing_id=${ac}`, acdata[ac].sensors.desired,head)
+      .post(`/control?thing_id=${ac_name}`, acdata[ac_name].sensors.desired,head)
       .then(() => (error) => {
         console.log(error);
       })
@@ -147,20 +147,20 @@ const AcCard = ({ room }) => {
   const handleFanChange = (val) => {
     setAcdata({
       ...acdata,
-      [ac]: {
-        ...acdata[ac],
+      [ac_name]: {
+        ...acdata[ac_name],
         sensors:{
-          ...acdata[ac].sensors,
+          ...acdata[ac_name].sensors,
           desired:{
-            ...acdata[ac].sensors.desired,
+            ...acdata[ac_name].sensors.desired,
             fan: val,
           },
         },
       },
     });
-    acdata[ac].sensors.desired.fan = val;
+    acdata[ac_name].sensors.desired.fan = val;
     axios
-      .post(`/control?thing_id=${ac}`, acdata[ac].sensors.desired, head)
+      .post(`/control?thing_id=${ac_name}`, acdata[ac_name].sensors.desired, head)
       .then(() => (error) => {
         console.log(error);
       })
@@ -173,21 +173,21 @@ const AcCard = ({ room }) => {
   const handleModeChange = (event) => {
     setAcdata({
       ...acdata,
-      [ac]: {
-        ...acdata[ac],
+      [ac_name]: {
+        ...acdata[ac_name],
         sensors:{
-          ...acdata[ac].sensors,
+          ...acdata[ac_name].sensors,
           desired:{
-            ...acdata[ac].sensors.desired,
+            ...acdata[ac_name].sensors.desired,
             mode: event.target.value,
           },
         },
       },
     });
     // console.log(event.target.value);
-    acdata[ac].sensors.mode = event.target.value;
+    acdata[ac_name].sensors.mode = event.target.value;
     axios
-      .post(`/control?thing_id=${ac}`, acdata[ac].sensors.desired, head)
+      .post(`/control?thing_id=${ac_name}`, acdata[ac_name].sensors.desired, head)
       .then(() => (error) => {
         console.log(error);
       })
@@ -200,21 +200,21 @@ const AcCard = ({ room }) => {
   const handleSwingChange = (event) => {
     setAcdata({
       ...acdata,
-      [ac]: {
-        ...acdata[ac],
+      [ac_name]: {
+        ...acdata[ac_name],
         sensors:{
-          ...acdata[ac].sensors,
+          ...acdata[ac_name].sensors,
           desired:{
-            ...acdata[ac].sensors.desired,
+            ...acdata[ac_name].sensors.desired,
             swing: event.target.value,
           },
         },
       },
     });
     // console.log(event.target.value);
-    acdata[ac].sensors.desired.swing = event.target.value;
+    acdata[ac_name].sensors.desired.swing = event.target.value;
     axios
-      .post(`/control?thing_id=${ac}`, acdata[ac].sensors.desired, head)
+      .post(`/control?thing_id=${ac_name}`, acdata[ac_name].sensors.desired, head)
       .then(() => (error) => {
         console.log(error);
       })
@@ -226,7 +226,7 @@ const AcCard = ({ room }) => {
 
   // console.log(acdata);
   //Get the thing name (ac name eg.brightAc)
-  const ac = Object.keys(acdata)[0];
+  const ac_name = Object.keys(acdata)[0];
   // console.log("AC", ac)
   return (
     <>
@@ -234,13 +234,13 @@ const AcCard = ({ room }) => {
         <Paper className={classes.first}>
           <Grid item xs={12}>
             <h1 className={classes.fonts}>
-              {acdata[ac].sensors.desired.temp}
+              {acdata[ac_name].sensors.desired.temp}
               °C
             </h1>
           </Grid>
           <Grid item xs={12} className={classes.center}>
             <Switch
-              checked={acdata[ac].sensors.desired.state}
+              checked={acdata[ac_name].sensors.desired.state}
               onChange={handleChange}
               color="primary"
               inputProps={{
@@ -257,11 +257,11 @@ const AcCard = ({ room }) => {
               min={16}
               max={30}
               value={
-                acdata[ac].sensors.desired.temp == null
+                acdata[ac_name].sensors.desired.temp == null
                   ? 24
-                  : acdata[ac].sensors.desired.temp
+                  : acdata[ac_name].sensors.desired.temp
               }
-              onChange={handleTempChange(ac)}
+              onChange={handleTempChange(ac_name)}
               // disabled={acdata[ac].sensors.state ? false : true}
             />
           </Grid>
@@ -311,7 +311,7 @@ const AcCard = ({ room }) => {
                 <Select
                   labelId="mode-select-label"
                   id="mode-select"
-                  value={acdata[ac].sensors.desired.mode}
+                  value={acdata[ac_name].sensors.desired.mode}
                   onChange={handleModeChange}
                   //disabled={acdata.brightAc.sensors.state ? false : true}
                 >
@@ -329,7 +329,7 @@ const AcCard = ({ room }) => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={acdata[ac].sensors.desired.swing}
+                  value={acdata[ac_name].sensors.desired.swing}
                   onChange={handleSwingChange}
                   //disabled={acdata[ac].sensors.state ? false : true}
                 >
