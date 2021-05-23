@@ -22,7 +22,9 @@ All other operations require authorization.
 Include the returned token in the header with the key `sessid`.
 
 ### Log out
+
 `POST /logout`  
+
 Returns if logged out
 ```json
 {
@@ -32,10 +34,67 @@ Returns if logged out
 }
 ```
 
+### Create account
+
+`POST /signup`
+
+Body
+```js
+{
+    "username": "hello",                // Required
+    "password": "world",                // Required
+    "first_name": "hello",              // Required
+    "last_name": "world",               // Required
+    "email": "hello.wo@kmitl.ac.th"     // Required; Must be university email
+}
+```
+
+Returns on success
+```js
+{
+    "result": {
+        "msg": "User must verify email address to continue."
+    }
+}
+```
+
+Returns on existing pending verification
+```js
+{
+    "status": "failure",
+    "reason": "User is pending email verification."
+}
+```
+
+### Verify email address
+`POST /signup_verify`
+
+URL Parameters (* - required)  
+`username` *  
+`verif_code` * 
+
+Returns on success
+```js
+{
+    "result": {
+        "msg": "User registration successful"
+    }
+}
+```
+
+Returns on invalid token
+```js
+{
+    "result": {
+        "msg": "Verification token invalid"
+    }
+}
+```
+
 ### General authorization failures
 
 Not logged in, or token invalid
-```json
+```js
 {
     "status": "failure",
     "reason": "Please log in before accessing the system."
@@ -43,7 +102,7 @@ Not logged in, or token invalid
 ```
 
 ## Thing database
----
+
 ### Get things
 `GET /things`
 
@@ -203,18 +262,12 @@ Returns
 
 
 ## Scheduling system examples
----
+
 ### View available schedules
+
 `GET /schedule`
 
-Finds schedules, using the following rule:  
-```
-  (room_id = room_id)
-AND
-  (course_start_time >= start_time AND course_start_time <= end_time)
-AND
-  (course_end_time >= start_time AND course_end_time <= end_time)
-```
+Finds scheduled events.
 
 URL Parameters (* - required)   
 `room_id` *  
@@ -225,7 +278,7 @@ Body
 None
 
 Returns on success  
-```json
+```js
 {
     "result": [
             {
@@ -271,7 +324,7 @@ Body
 ```
 
 Returns on success  
-```json
+```js
 {
     "result": "OK"
 }
@@ -279,7 +332,7 @@ Returns on success
 
 Returns on conflict `409`
 The list of conflicting events and their schedule entries.  
-```json
+```js
 {
     "result": {
         "msg": "There are conflicting scheduled events.",
@@ -322,7 +375,7 @@ Body
 
 Returns on success  
 The schedule entry which was updated, with its most recent values.
-```json
+```js
 {
     "result": {
         "current": {
@@ -341,7 +394,7 @@ The schedule entry which was updated, with its most recent values.
 
 Returns on conflict `409`
 The list of conflicting events and their schedule entries.  
-```json
+```js
 {
     "result": {
         "msg": "There are conflicting scheduled events.",
@@ -374,7 +427,7 @@ None
 
 Returns on success  
 The event that was deleted with all its old details.
-```json
+```js
 {
     "result": {
         "deleted": {
@@ -393,7 +446,7 @@ The event that was deleted with all its old details.
 
 Returns on failure
 The failure with its reason.
-```json
+```js
 {
     "status": "failure",
     "reason": "The event has already been deleted, or you do not have permission to delete it."
@@ -409,7 +462,7 @@ For `POST` and `PATCH` requests, control actions can be scheduled. Note the foll
 To add events, add a key named `actions` in the request body along with the other parameters, such as start and end times.
 
 Additional Value
-```json
+```js
 {
   "actions": [
     {
@@ -439,7 +492,7 @@ scheduled entry. See those sections for the return values.
 
 Returns on conflict `409`
 The list of conflicting events and their schedule entries.  
-```json
+```js
 {
     "result": {
         "msg": "Scheduled actions have conflicting events.",
