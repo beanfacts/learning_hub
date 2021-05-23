@@ -263,7 +263,7 @@ const AcCard = ({ room }) => {
                   : acdata[ac_name].sensors.desired.temp
               }
               onChange={handleTempChange(ac_name)}
-              disabled={acdata[ac_name].sensors.state ? false : true}
+              disabled={acdata[ac_name].sensors.desired.state ? false : true}
             />
           </Grid>
           <Grid item xs={12}>
@@ -272,7 +272,7 @@ const AcCard = ({ room }) => {
               size="medium"
               color="primary"
               aria-label="large outlined primary button group"
-              disabled={acdata[ac_name].sensors.state ? false : true}
+              disabled={acdata[ac_name].sensors.desired.state ? false : true}
             >
               <Button
               onClick={() => {
@@ -314,7 +314,7 @@ const AcCard = ({ room }) => {
                   id="mode-select"
                   value={acdata[ac_name].sensors.desired.mode}
                   onChange={handleModeChange}
-                  disabled={acdata[ac_name].sensors.state ? false : true}
+                  disabled={acdata[ac_name].sensors.desired.state ? false : true}
                 >
                   <MenuItem value={"auto"}>Auto</MenuItem>
                   <MenuItem value={"heat"}>Heat</MenuItem>
@@ -332,7 +332,7 @@ const AcCard = ({ room }) => {
                   id="demo-simple-select"
                   value={acdata[ac_name].sensors.desired.swing}
                   onChange={handleSwingChange}
-                  disabled={acdata[ac_name].sensors.state ? false : true}
+                  disabled={acdata[ac_name].sensors.desired.state ? false : true}
                 >
                   <MenuItem value={"auto"}>Auto</MenuItem>
                   <MenuItem value={"up"}>Up</MenuItem>
