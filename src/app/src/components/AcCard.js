@@ -64,13 +64,14 @@ const AcCard = ({ room }) => {
   const [acdata, setAcdata] = useState({});
   const [acexist, setAcexist] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
   const aircond = async () => {
     try {
       var path = `/things?room_id=${room}&type=ac`;
       const res = await axios.get(path, head).then((res) => {
         setAcdata(res.data.result.things);
         console.log("STATE", res.data.result.things);
-        console.log("ACDATA", acdata.brightAc);
+        console.log("ACDATA", acdata[ac]);
       });
       setLoading(true);
       // console.log(res.data);
@@ -89,127 +90,157 @@ const AcCard = ({ room }) => {
 
   // handle state change - on/off
   const handleChange = (event) => {
+    // setChecked((prev)=>!prev);
     setAcdata({
       ...acdata,
       [ac]: {
         ...acdata[ac],
         sensors: {
           ...acdata[ac].sensors,
-          reported: {
-            ...acdata[ac].sensors.reported,
+          desired: {
+            ...acdata[ac].sensors.desired,
             state: Number(event.target.checked),
           },
         },
       },
     });
-    console.log("DESIRE",acdata[ac].sensors.desired.state);
-    console.log("REPORTED", acdata[ac].sensors.reported.state)
-    // acdata.brightAc.sensors.reported.state = event.target.checked;
+    // console.log(checked)
+    // console.log("REPORTED", acdata[ac].sensors.reported.state)
+    acdata[ac].sensors.desired.state = Number(event.target.checked);
     axios
-      .post(`/control?thing_id=brightAc`, acdata[ac].sensors.reported, head)
+      .post(`/control?thing_id=${ac}`, acdata[ac].sensors.desired, head)
       .then(() => (error) => {
+        console.log(error);
+      })
+      .catch(function(error){
         console.log(error);
       });
   };
 
-  // // handle temp change
-  // const handleTempChange = (name) => (e, data) => {
-  //   setAcdata({
-  //     ...acdata.things.brightAc.sensors,
-  //     reported: {
-  //       ...acdata[ac_keys].things.brightAc.sensors.reported,
-  //       temp: data,
-  //     },
-  //   });
-
-  //   let id = name;
-  //   axios
-  //     .post(`/control?id=${ac_keys[0]}`, acdata[ac_keys[0]].things.brightAc.sensors.temp)
-  //     .then(() => (error) => {
-  //       console.log(error);
-  //     });
-  // };
+  // handle temp change
+  const handleTempChange = (name) => (e, data) => {
+    setAcdata({
+      ...acdata,
+      [name]:{
+        ...acdata[name],
+        sensors:{
+          ...acdata[name].sensors,
+          desired: {
+            ...acdata[name].sensors.desired,
+            temp: data,
+          }
+        }
+      }
+    })
+    acdata[ac].sensors.desired.temp = data;
+    axios
+      .post(`/control?thing_id=${ac}`, acdata[ac].sensors.desired,head)
+      .then(() => (error) => {
+        console.log(error);
+      })
+      .catch(function(error){
+        console.log(error);
+      });
+  };
 
   // //handle fan change
-  // const handleFanChange = (val) => {
-  //   setAcdata({
-  //     ...acdata,
-  //     [ac_keys[0]]: {
-  //       ...acdata[ac_keys[0]].things.brightAc.sensors,
-  //       reported: {
-  //         ...acdata[ac_keys[0]].things.brightAc.sensors.reported,
-  //         fan: val,
-  //       },
-  //     },
-  //   });
-  //   let id = ac_keys[0];
-  //   acdata[id].things.brightAc.sensors.fan = val;
-  //   axios
-  //     .post(`/control?id=${ac_keys[0]}`, acdata[id].things.brightAc.sensors.fan, head)
-  //     .then(() => (error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const handleFanChange = (val) => {
+    setAcdata({
+      ...acdata,
+      [ac]: {
+        ...acdata[ac],
+        sensors:{
+          ...acdata[ac].sensors,
+          desired:{
+            ...acdata[ac].sensors.desired,
+            fan: val,
+          },
+        },
+      },
+    });
+    acdata[ac].sensors.desired.fan = val;
+    axios
+      .post(`/control?thing_id=${ac}`, acdata[ac].sensors.desired, head)
+      .then(() => (error) => {
+        console.log(error);
+      })
+      .catch(function(error){
+        console.log(error)
+      });
+  };
 
   // //handle mode change
-  // const handleModeChange = (event) => {
-  //   setAcdata({
-  //     ...acdata,
-  //     [ac_keys[0]]: {
-  //       ...acdata[ac_keys[0]].things.brightAc.sensors,
-  //       reported: {
-  //         ...acdata[ac_keys[0]].things.brightAc.sensors.reported,
-  //         mode: event.target.value,
-  //       },
-  //     },
-  //   });
-  //   let id = ac_keys[0];
-  //   // console.log(event.target.value);
-  //   acdata[id].things.brightAc.sensors.mode = event.target.value;
-  //   axios
-  //     .post(`/control?id=${ac_keys[0]}`, acdata[id].things.brightAc.sensors.mode, head)
-  //     .then(() => (error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const handleModeChange = (event) => {
+    setAcdata({
+      ...acdata,
+      [ac]: {
+        ...acdata[ac],
+        sensors:{
+          ...acdata[ac].sensors,
+          desired:{
+            ...acdata[ac].sensors.desired,
+            mode: event.target.value,
+          },
+        },
+      },
+    });
+    // console.log(event.target.value);
+    acdata[ac].sensors.mode = event.target.value;
+    axios
+      .post(`/control?thing_id=${ac}`, acdata[ac].sensors.desired, head)
+      .then(() => (error) => {
+        console.log(error);
+      })
+      .catch(function(error){
+        console.log(error);
+      });
+  };
 
   // //handle mode change
-  // const handleSwingChange = (event) => {
-  //   setAcdata({
-  //     ...acdata,
-  //     [ac_keys[0]]: {
-  //       ...acdata[ac_keys[0]].things.brightAc.sensors,
-  //       reported: {
-  //         ...acdata[ac_keys[0]].things.brightAc.sensors.reported,
-  //         swing: event.target.value,
-  //       },
-  //     },
-  //   });
-  //   let id = ac_keys[0];
-  //   console.log(event.target.value);
-  //   acdata[id].things.brightAc.sensors.swing = event.target.value;
-  //   axios
-  //     .post(`/control?id=${ac_keys[0]}`, acdata[id].things.brightAc.sensors.swing, head)
-  //     .then(() => (error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const handleSwingChange = (event) => {
+    setAcdata({
+      ...acdata,
+      [ac]: {
+        ...acdata[ac],
+        sensors:{
+          ...acdata[ac].sensors,
+          desired:{
+            ...acdata[ac].sensors.desired,
+            swing: event.target.value,
+          },
+        },
+      },
+    });
+    // console.log(event.target.value);
+    acdata[ac].sensors.desired.swing = event.target.value;
+    axios
+      .post(`/control?thing_id=${ac}`, acdata[ac].sensors.desired, head)
+      .then(() => (error) => {
+        console.log(error);
+      })
+      .catch(function(error){
+        console.log(error);
+      });
+  };
+
+
   // console.log(acdata);
+  //Get the thing name (ac name eg.brightAc)
   const ac = Object.keys(acdata)[0];
-  // console.log(typeof ac)
+  // console.log("AC", ac)
   return (
     <>
       {loading ? (
         <Paper className={classes.first}>
           <Grid item xs={12}>
             <h1 className={classes.fonts}>
-              {acdata[ac].sensors.reported.temp}
+              {acdata[ac].sensors.desired.temp}
               °C
             </h1>
           </Grid>
           <Grid item xs={12} className={classes.center}>
             <Switch
-              checked={acdata[ac].sensors.reported.state}
+              checked={acdata[ac].sensors.desired.state}
               onChange={handleChange}
               color="primary"
               inputProps={{
@@ -226,12 +257,12 @@ const AcCard = ({ room }) => {
               min={16}
               max={30}
               value={
-                acdata.brightAc.sensors.temp == null
+                acdata[ac].sensors.desired.temp == null
                   ? 24
-                  : acdata.brightAc.sensors.temp
+                  : acdata[ac].sensors.desired.temp
               }
-              // onChange={handleTempChange(ac_keys[0])}
-              disabled={acdata.brightAc.sensors.state ? false : true}
+              onChange={handleTempChange(ac)}
+              // disabled={acdata[ac].sensors.state ? false : true}
             />
           </Grid>
           <Grid item xs={12}>
@@ -240,33 +271,33 @@ const AcCard = ({ room }) => {
               size="medium"
               color="primary"
               aria-label="large outlined primary button group"
-              disabled={acdata.brightAc.sensors.state ? false : true}
+              //disabled={acdata.brightAc.sensors.state ? false : true}
             >
               <Button
-              // onClick={() => {
-              //   handleFanChange(0);
-              // }}
+              onClick={() => {
+                handleFanChange(0);
+              }}
               >
                 Auto
               </Button>
               <Button
-              // onClick={() => {
-              //   handleFanChange(1);
-              // }}
+              onClick={() => {
+                handleFanChange(1);
+              }}
               >
                 Low
               </Button>
               <Button
-              // onClick={() => {
-              //   handleFanChange(2);
-              // }}
+              onClick={() => {
+                handleFanChange(2);
+              }}
               >
                 Mid
               </Button>
               <Button
-              // onClick={() => {
-              //   handleFanChange(3);
-              // }}
+              onClick={() => {
+                handleFanChange(3);
+              }}
               >
                 High
               </Button>
@@ -280,9 +311,9 @@ const AcCard = ({ room }) => {
                 <Select
                   labelId="mode-select-label"
                   id="mode-select"
-                  value={acdata.brightAc.sensors.mode}
-                  // onChange={handleModeChange}
-                  disabled={acdata.brightAc.sensors.state ? false : true}
+                  value={acdata[ac].sensors.desired.mode}
+                  onChange={handleModeChange}
+                  //disabled={acdata.brightAc.sensors.state ? false : true}
                 >
                   <MenuItem value={"auto"}>Auto</MenuItem>
                   <MenuItem value={"heat"}>Heat</MenuItem>
@@ -298,9 +329,9 @@ const AcCard = ({ room }) => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={acdata.brightAc.sensors.swing}
-                  // onChange={handleSwingChange}
-                  disabled={acdata.brightAc.sensors.state ? false : true}
+                  value={acdata[ac].sensors.desired.swing}
+                  onChange={handleSwingChange}
+                  //disabled={acdata[ac].sensors.state ? false : true}
                 >
                   <MenuItem value={"auto"}>Auto</MenuItem>
                   <MenuItem value={"up"}>Up</MenuItem>
