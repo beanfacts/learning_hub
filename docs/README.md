@@ -33,6 +33,62 @@ Returns if logged out
 }
 ```
 
+### Create account
+`POST /signup`
+
+Body
+```js
+{
+    "username": "hello",                // Required
+    "password": "world",                // Required
+    "first_name": "hello",              // Required
+    "last_name": "world",               // Required
+    "email": "hello.wo@kmitl.ac.th"     // Required; Must be university email
+}
+```
+
+Returns on success
+```js
+{
+    "result": {
+        "msg": "User must verify email address to continue."
+    }
+}
+```
+
+Returns on existing pending verification
+```js
+{
+    "status": "failure",
+    "reason": "User is pending email verification."
+}
+```
+
+### Verify email address
+`POST /signup_verify`
+
+URL Parameters (* - required)  
+`username` *  
+`verif_code` * 
+
+Returns on success
+```json
+{
+    "result": {
+        "msg": "User registration successful"
+    }
+}
+```
+
+Returns on invalid token
+```json
+{
+    "result": {
+        "msg": "Verification token invalid"
+    }
+}
+```
+
 ### General authorization failures
 
 Not logged in, or token invalid
@@ -44,7 +100,7 @@ Not logged in, or token invalid
 ```
 
 ## Thing database
----
+
 ### Get things
 `GET /things`
 
@@ -204,7 +260,7 @@ Returns
 
 
 ## Scheduling system examples
----
+
 ### View available schedules
 `GET /schedule`
 
