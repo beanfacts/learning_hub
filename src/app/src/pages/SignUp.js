@@ -13,9 +13,6 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import { set } from 'react-hook-form';
-
 
 
 function Copyright() {
@@ -82,7 +79,8 @@ export default function SignUp() {
   const [ConpassWord, setConPassWord] = useState('');
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0)
-  const [errors,setErrors] = useState('error')
+  const [checkerrors,setCheckErrors] = useState('')
+  const [showError, setshowError] = useState(false);
   const  nextStep= () =>{
     if (activeStep < 3 && 
       firstName && lastName && email && userName && passWord === ConpassWord
@@ -90,10 +88,7 @@ export default function SignUp() {
       ){
       setActiveStep((currentStep) => currentStep +1) //increasing the step
     }
-    // if (ConpassWord !== passWord){
-    //   He
-    // }
-
+   
    
   }
   // console.log({firstName})
@@ -101,15 +96,19 @@ export default function SignUp() {
    console.log(passWord,ConpassWord)
   if (ConpassWord === passWord){
     console.log('equal')
-
+    setshowError(false)
+    setCheckErrors('')
   }
   else {
-    setErrors('blaaaaa')
+    setshowError(true)
+    setCheckErrors('miss match')
+    // setCheckErrors('this is ')
   }
    
  }
+ 
 
- checkpass()
+
 
   return (
     <Container component="main" maxWidth="xs">
@@ -155,7 +154,7 @@ export default function SignUp() {
                 
               />
             </Grid>
-            {/* <h3>{firstName}</h3> */}
+            <h3>{passWord}</h3>
             <Grid item xs={12} sm={6}>
               <TextField
                 variant="outlined"
@@ -202,24 +201,26 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                onChange={e => setPassWord(e.target.value)}
+                onChange={e => {setPassWord(e.target.value)
+                  checkpass()
+                }}
               />
               </Grid>
               <Grid item xs={12}>
               <TextField
-                error
                 variant="outlined"
                 required
-                fullWidth
+                fullWidth 
                 id="Conpass"
                 type="password"
                 label="Confirm Password"
                 name="Conpass"
                 autoComplete="Conpass"
-                error= {Boolean(errors)}
-                helperText="password mismatch"
+                error= {showError}
+                helperText={(checkerrors)}
                 onChange={e => {
                   setConPassWord(e.target.value)
+                  checkpass()
                 }}
               />
             </Grid>
