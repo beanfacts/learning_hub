@@ -2,9 +2,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Unlocked from "@material-ui/icons/LockOpenOutlined";
 import Locked from "@material-ui/icons/LockOutlined";
 import IconButton from "@material-ui/core/IconButton";
-
-import VideoIcon from "@material-ui/icons/OndemandVideoRounded";
-import ErrorIcon from "@material-ui/icons/ErrorOutlineRounded";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import Paper from "@material-ui/core/Paper";
@@ -36,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
 
 const LockCard = ({ room }) => {
   const classes = useStyles();
-  const [id, setID] = useState("");
   const [cabinet, setCabinet] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -44,7 +40,6 @@ const LockCard = ({ room }) => {
     var path = `/things?room_id=${room}&type=cabinet`;
     await axios.get(path, head).then((res) => {
       setCabinet(res.data.result.things);
-      // const cabinet_state = cabinet[Object.keys(cabinet)];
       console.log(cabinet);
     });
     setLoading(true);
@@ -81,7 +76,6 @@ const LockCard = ({ room }) => {
       })
       .catch((err) => {});
   };
-
   return (
     <>
       {loading ? (

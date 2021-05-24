@@ -21,7 +21,6 @@ import {
   DragDropProvider,
   TodayButton,
   Toolbar,
-  // Resources,
   DayView,
   DateNavigator,
   CurrentTimeIndicator,
