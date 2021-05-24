@@ -21,8 +21,11 @@ import {
   DragDropProvider,
   TodayButton,
   Toolbar,
-  Resources,
+  // Resources,
+  DayView,
   DateNavigator,
+  CurrentTimeIndicator,
+  ViewSwitcher,
 } from "@devexpress/dx-react-scheduler-material-ui";
 import { courses, appointments } from "../components/data/tasks";
 
@@ -263,13 +266,17 @@ const SchedulerCard = ({ room }) => {
         <React.Fragment>
           <Paper>
             <Scheduler data={data} height={"auto"}>
-              <ViewState defaultCurrentDate={currentDate} />
+              <ViewState
+                defaultCurrentDate={currentDate}
+                defaultCurrentViewName="Week"
+              />
               <EditingState
                 onCommitChanges={onCommitChanges}
                 addedAppointment={addedAppointment}
                 onAddedAppointmentChange={onAddedAppointmentChange}
               />
               <IntegratedEditing />
+              <DayView startDayHour={9} endDayHour={18} />
               <WeekView
                 startDayHour={9}
                 endDayHour={19}
@@ -292,6 +299,8 @@ const SchedulerCard = ({ room }) => {
                 allowDrag={allowDrag}
                 allowResize={allowResize}
               />
+              <ViewSwitcher />
+              <CurrentTimeIndicator />
             </Scheduler>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
               <Alert onClose={handleClose} severity="error">
