@@ -70,8 +70,8 @@ const AcCard = ({ room }) => {
       var path = `/things?room_id=${room}&type=ac`;
       const res = await axios.get(path, head).then((res) => {
         setAcdata(res.data.result.things);
-        console.log("STATE", res.data.result.things);
-        console.log("ACDATA", acdata[ac_name]);
+        // console.log("STATE", res.data.result.things);
+        // console.log("ACDATA", acdata[ac_name]);
       });
       setLoading(true);
       // console.log(res.data);

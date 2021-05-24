@@ -26,9 +26,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: theme.spacing(0, 2),
   },
-  fixedWidthContainer: {
-    width: "240px",
-  },
   titleSpacing: {
     marginRight: theme.spacing(2),
   },
@@ -156,20 +153,14 @@ function Navigation() {
   const protectComponent = () => {
     if (window.location.pathname !== "/signin") {
       return (
-        <Grid xs={2} item className={classes.fixedWidthContainer}>
-          {/* <IconButton
-            color="primary"
-            aria-label="upload picture"
-            component="span"
-            onClick={handleLogout}
-          > */}
+        <Grid item>
           <IconButton
             color="primary"
             aria-label="upload picture"
             component="span"
             onClick={handleClickOpen}
           >
-            <Logoutico style={{ color: "white", fontSize: 40 }} />
+            <Logoutico style={{ color: "white", fontSize: 30 }} />
           </IconButton>
           <Dialog
             disableBackdropClick
@@ -203,7 +194,10 @@ function Navigation() {
   };
 
   const logOutWhenNoSessID = () => {
-    if (sessionStorage.getItem("sessid") === null) {
+    if (
+      sessionStorage.getItem("sessid") === null ||
+      sessionStorage.getItem("sessid") === ""
+    ) {
       window.location.href = "/signin";
       console.log("You have been logged out");
       sessionStorage.setItem("sessid", null);

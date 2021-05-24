@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
     height: "90%",
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
   },
   BulbIcon: {
     fontSize: "7rem",
@@ -90,9 +93,6 @@ const LightCard = ({ room }) => {
     <>
       {loading ? (
         <Paper className={classes.first}>
-          <br />
-          <br />
-          <br />
           <Grid item xs={12}>
             <Grid item xs container direction="row">
               <Grid item xs={6}>

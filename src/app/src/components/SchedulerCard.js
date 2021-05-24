@@ -52,25 +52,20 @@ const head = {
 };
 
 const SchedulerCard = ({ room }) => {
-  // room = "hm_601";
-  // console.log(room);
   const currentDate1 = moment();
   const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(false);
   const [roomExist, setRoomExist] = useState(false);
   if (room === "") {
-    console.log("ROOMNULL");
   }
   /* getting the data from api */
   const getSchedule = async () => {
     try {
       const datePast = moment().subtract(7, "d").unix();
       const dateFuture = moment().add(7, "d").unix();
-      // console.log(dateFuture, datePast);
       var path = `/schedule?room_id=${room}&start_time=${datePast}&end_time=${dateFuture}`;
       await axios.get(path, head).then((res) => {
         setSchedule(res.data.result);
-        console.log(res.data.result);
       });
       setLoading(true);
     } catch (e) {
@@ -210,8 +205,6 @@ const SchedulerCard = ({ room }) => {
         console.log(reply);
       }
       setIsAppointmentBeingCreated(false);
-
-      // console.log(reply);
     },
     [setData, setIsAppointmentBeingCreated, data]
   );
@@ -227,7 +220,6 @@ const SchedulerCard = ({ room }) => {
     setAddedAppointment(appointment);
     setIsAppointmentBeingCreated(true);
   });
-  console.log(data);
 
   const TimeTableCell = useCallback(
     memo(({ onDoubleClick, ...restProps }) => (
