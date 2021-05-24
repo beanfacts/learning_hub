@@ -15,6 +15,10 @@ import {
 import axios from "../axios";
 import React, { useEffect, useState } from "react";
 
+const head = {
+  headers: { sessid: sessionStorage.getItem("sessid") },
+};
+
 const useStyles = makeStyles((theme) => ({
   center: {
     textAlign: "-moz-center",
@@ -57,161 +61,208 @@ const AcCard = ({ room }) => {
     },
   ];
 
-  const [acdata, setAcdata] = useState([]);
+  const [acdata, setAcdata] = useState({});
   const [acexist, setAcexist] = useState(true);
   const [loading, setLoading] = useState(false);
-
+  const [checked, setChecked] = useState(false);
   const aircond = async () => {
     try {
       var path = `/things?room_id=${room}&type=ac`;
-      const res = await axios.get(path).then((res) => {
-        setAcdata(res.data.result);
+      const res = await axios.get(path, head).then((res) => {
+        setAcdata(res.data.result.things);
+        // console.log("STATE", res.data.result.things);
+        // console.log("ACDATA", acdata[ac_name]);
       });
       setLoading(true);
-      console.log(res);
+      // console.log(res.data);
       if (acdata[Object.keys(acdata)[0]] === undefined) {
         setAcexist(false);
       }
     } catch (e) {
-      console.log(e);
+      console.log(e.result);
     }
   };
-
+  // const key = Object.keys(acdata.things)[0];
+  // console.log("KEY", key)
   useEffect(() => {
     aircond();
   }, []);
 
-  //handle state change - on/off
+  // handle state change - on/off
   const handleChange = (event) => {
+    // setChecked((prev)=>!prev);
     setAcdata({
       ...acdata,
-      [event.target.name]: {
-        ...acdata[event.target.name],
+      [ac_name]: {
+        ...acdata[ac_name],
         sensors: {
-          ...acdata[event.target.name].sensors,
-          state: event.target.checked,
+          ...acdata[ac_name].sensors,
+          desired: {
+            ...acdata[ac_name].sensors.desired,
+            state: Number(event.target.checked),
+          },
         },
       },
     });
-    let id = event.target.name;
-    console.log("Hello", id);
-    acdata[id].sensors.state = event.target.checked;
+    console.log(event.target.checked);
+    // console.log("REPORTED", acdata[ac].sensors.reported.state)
+    acdata[ac_name].sensors.desired.state = Number(event.target.checked);
     axios
-      .post(`/control?id=${event.target.name}`, acdata[id].sensors)
+      .post(
+        `/control?thing_id=${ac_name}`,
+        acdata[ac_name].sensors.desired,
+        head
+      )
       .then(() => (error) => {
+        console.log(error);
+      })
+      .catch(function (error) {
         console.log(error);
       });
   };
 
   // handle temp change
-  const handleTempChange = (name) => (e, data) => {
+  const handleTempChange = (ac_name) => (e, data) => {
     setAcdata({
       ...acdata,
-      [ac_keys[0]]: {
-        ...acdata[ac_keys[0]],
+      [ac_name]: {
+        ...acdata[ac_name],
         sensors: {
-          ...acdata[ac_keys].sensors,
-          temp: data,
+          ...acdata[ac_name].sensors,
+          desired: {
+            ...acdata[ac_name].sensors.desired,
+            temp: data,
+          },
         },
       },
     });
-
-    let id = name;
-    console.log(typeof acdata[ac_keys[0]].sensors.temp);
-    console.log(typeof data);
-
-    // acdata[id].sensors.temp = data.toFixed(2);
+    acdata[ac_name].sensors.desired.temp = data;
     axios
-      .post(`/control?id=${ac_keys[0]}`, acdata[ac_keys[0]].sensors)
+      .post(
+        `/control?thing_id=${ac_name}`,
+        acdata[ac_name].sensors.desired,
+        head
+      )
       .then(() => (error) => {
+        console.log(error);
+      })
+      .catch(function (error) {
         console.log(error);
       });
   };
 
-  //handle fan change
+  // //handle fan change
   const handleFanChange = (val) => {
     setAcdata({
       ...acdata,
-      [ac_keys[0]]: {
-        ...acdata[ac_keys[0]],
+      [ac_name]: {
+        ...acdata[ac_name],
         sensors: {
-          ...acdata[ac_keys[0]].sensors,
-          fan: val,
+          ...acdata[ac_name].sensors,
+          desired: {
+            ...acdata[ac_name].sensors.desired,
+            fan: val,
+          },
         },
       },
     });
-    let id = ac_keys[0];
-    acdata[id].sensors.fan = val;
+    acdata[ac_name].sensors.desired.fan = val;
     axios
-      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors)
+      .post(
+        `/control?thing_id=${ac_name}`,
+        acdata[ac_name].sensors.desired,
+        head
+      )
       .then(() => (error) => {
+        console.log(error);
+      })
+      .catch(function (error) {
         console.log(error);
       });
   };
 
-  //handle mode change
+  // //handle mode change
   const handleModeChange = (event) => {
     setAcdata({
       ...acdata,
-      [ac_keys[0]]: {
-        ...acdata[ac_keys[0]],
+      [ac_name]: {
+        ...acdata[ac_name],
         sensors: {
-          ...acdata[ac_keys[0]].sensors,
-          mode: event.target.value,
+          ...acdata[ac_name].sensors,
+          desired: {
+            ...acdata[ac_name].sensors.desired,
+            mode: event.target.value,
+          },
         },
       },
     });
-    let id = ac_keys[0];
-    console.log(event.target.value);
-    acdata[id].sensors.mode = event.target.value;
+    // console.log(event.target.value);
+    acdata[ac_name].sensors.mode = event.target.value;
     axios
-      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors)
+      .post(
+        `/control?thing_id=${ac_name}`,
+        acdata[ac_name].sensors.desired,
+        head
+      )
       .then(() => (error) => {
+        console.log(error);
+      })
+      .catch(function (error) {
         console.log(error);
       });
   };
 
-  //handle mode change
+  // //handle mode change
   const handleSwingChange = (event) => {
     setAcdata({
       ...acdata,
-      [ac_keys[0]]: {
-        ...acdata[ac_keys[0]],
+      [ac_name]: {
+        ...acdata[ac_name],
         sensors: {
-          ...acdata[ac_keys[0]].sensors,
-          swing: event.target.value,
+          ...acdata[ac_name].sensors,
+          desired: {
+            ...acdata[ac_name].sensors.desired,
+            swing: event.target.value,
+          },
         },
       },
     });
-    let id = ac_keys[0];
-    console.log(event.target.value);
-    acdata[id].sensors.swing = event.target.value;
+    // console.log(event.target.value);
+    acdata[ac_name].sensors.desired.swing = event.target.value;
     axios
-      .post(`/control?id=${ac_keys[0]}`, acdata[id].sensors)
+      .post(
+        `/control?thing_id=${ac_name}`,
+        acdata[ac_name].sensors.desired,
+        head
+      )
       .then(() => (error) => {
+        console.log(error);
+      })
+      .catch(function (error) {
         console.log(error);
       });
   };
-  const ac_keys = Object.keys(acdata);
 
+  // console.log(acdata);
+  //Get the thing name (ac name eg.brightAc)
+  const ac_name = Object.keys(acdata)[0];
+  // console.log("AC", ac)
   return (
     <>
       {loading ? (
         <Paper className={classes.first}>
           <Grid item xs={12}>
             <h1 className={classes.fonts}>
-              {acdata[ac_keys[0]].sensors.temp == null
-                ? 24
-                : acdata[ac_keys[0]].sensors.temp}
+              {acdata[ac_name].sensors.desired.temp}
               °C
             </h1>
           </Grid>
           <Grid item xs={12} className={classes.center}>
             <Switch
-              checked={acdata[ac_keys[0]].sensors.state}
+              value={acdata[ac_name].sensors.desired.state}
+              checked={acdata[ac_name].sensors.desired.state}
               onChange={handleChange}
               color="primary"
-              name={ac_keys[0]}
               inputProps={{
                 "aria-label": "primary checkbox",
               }}
@@ -226,12 +277,12 @@ const AcCard = ({ room }) => {
               min={16}
               max={30}
               value={
-                acdata[ac_keys[0]].sensors.temp == null
+                acdata[ac_name].sensors.desired.temp == null
                   ? 24
-                  : acdata[ac_keys[0]].sensors.temp
+                  : acdata[ac_name].sensors.desired.temp
               }
-              onChange={handleTempChange(ac_keys[0])}
-              disabled={acdata[ac_keys[0]].sensors.state ? false : true}
+              onChange={handleTempChange(ac_name)}
+              disabled={acdata[ac_name].sensors.desired.state ? false : true}
             />
           </Grid>
           <Grid item xs={12}>
@@ -240,7 +291,7 @@ const AcCard = ({ room }) => {
               size="medium"
               color="primary"
               aria-label="large outlined primary button group"
-              disabled={acdata[ac_keys[0]].sensors.state ? false : true}
+              disabled={acdata[ac_name].sensors.desired.state ? false : true}
             >
               <Button
                 onClick={() => {
@@ -280,9 +331,11 @@ const AcCard = ({ room }) => {
                 <Select
                   labelId="mode-select-label"
                   id="mode-select"
-                  value={acdata[ac_keys[0]].sensors.mode}
+                  value={acdata[ac_name].sensors.desired.mode}
                   onChange={handleModeChange}
-                  disabled={acdata[ac_keys[0]].sensors.state ? false : true}
+                  disabled={
+                    acdata[ac_name].sensors.desired.state ? false : true
+                  }
                 >
                   <MenuItem value={"auto"}>Auto</MenuItem>
                   <MenuItem value={"heat"}>Heat</MenuItem>
@@ -298,9 +351,11 @@ const AcCard = ({ room }) => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={acdata[ac_keys[0]].sensors.swing}
+                  value={acdata[ac_name].sensors.desired.swing}
                   onChange={handleSwingChange}
-                  disabled={acdata[ac_keys[0]].sensors.state ? false : true}
+                  disabled={
+                    acdata[ac_name].sensors.desired.state ? false : true
+                  }
                 >
                   <MenuItem value={"auto"}>Auto</MenuItem>
                   <MenuItem value={"up"}>Up</MenuItem>

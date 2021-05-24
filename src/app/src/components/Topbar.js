@@ -16,14 +16,20 @@ import {
   Grid,
 } from "@material-ui/core";
 import { AcCard } from "./AcCard";
-import { VdoCard } from "./VdoCard";
+import { LockCard } from "./LockCard";
 import { LightCard } from "./LightCard";
 import CloseIcon from "@material-ui/icons/Close";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { SchedulerCard } from "../components/SchedulerCard";
 import Remote from "@material-ui/icons/SettingsRemoteRounded";
+
+const head = {
+  headers: { sessid: sessionStorage.getItem("sessid") },
+};
+
 const StyledButton = withStyles({
   root: {
     background: "#3f51b5",
@@ -136,7 +142,8 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 const Topbar = () => {
-  const [room, setRoom] = useState(["None"]);
+  const [room, setRoom] = useState("");
+  const [roomName, setRoomName] = useState(["None"]);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -152,7 +159,9 @@ const Topbar = () => {
   };
 
   const updateRoom = (event) => {
-    setRoom(event.target.value);
+    setRoom(event.target.value[0]);
+    setRoomName(event.target.value[1]);
+    console.log(event.target.value[1]);
     setSelectedroom(true);
   };
 
@@ -169,9 +178,8 @@ const Topbar = () => {
     //axios function
     async function fetchdata() {
       // TODO change to actual path
-      const request = await axios.get("/rooms");
-      console.log(request.data);
-      setHm(request.data);
+      const request = await axios.get("/rooms", head);
+      setHm(request.data.result);
       setLoading(true);
       return request;
     }
@@ -180,20 +188,36 @@ const Topbar = () => {
         // console.log(response);
       },
       (error) => {
-        console.log(error);
+        console.log("ERROR RES", error);
       }
     );
   }, []);
 
   let newRoom = null;
-  let items = [];
-  for (const [k] of Object.entries(hm)) {
-    items.push(k);
-  }
-  newRoom = items.map((value, index) => {
-    return <MenuItem value={value}>{value}</MenuItem>;
+  /* 
+  TODO: change the room id to room name and when pass in
+  the value use the room id!!
+  */
+  const room_n = hm.map((k) => k.room_name);
+  const room_i = hm.map((k) => k.room_id);
+  const zip = (a, b) => a.map((k, i) => [k, b[i]]);
+  const room_tup = zip(room_i, room_n);
+
+  newRoom = room_tup.map((value, index) => {
+    // console.log(value)
+    return (
+      <MenuItem onClick={handleClose} value={value}>
+        {value[1]}
+      </MenuItem>
+    );
   });
-  console.log({ newRoom });
+  const protectComponent = () => {
+    return <SchedulerCard room={room} />;
+  };
+  useEffect(() => {
+    protectComponent();
+  }, [room]);
+  // console.log(newRoom)
   return (
     <>
       {loading ? (
@@ -213,7 +237,7 @@ const Topbar = () => {
                 bgcolor="white"
                 className={classes.selectedValueDisplay}
               >
-                {room}
+                {roomName}
               </Box>
             </div>
           </Grid>
@@ -276,18 +300,15 @@ const Topbar = () => {
               </DialogTitle>
               <DialogContent dividers>
                 <Grid item xs={12} container direction="row">
-                  {/* <Grid item xs={2}></Grid> */}
                   <Grid item xs={4}>
-                    <VdoCard />
+                    <LockCard room={room} />
                   </Grid>
                   <Grid item xs={4}>
                     <LightCard room={room} />
-                    {/* TODO change the "hm_602" to dynamic value (the value that you stored) */}
                   </Grid>
                   <Grid item xs={4}>
                     <AcCard room={room} />
                   </Grid>
-                  {/* <Grid item xs={2}></Grid> */}
                 </Grid>
               </DialogContent>
               <DialogActions>
@@ -297,6 +318,8 @@ const Topbar = () => {
               </DialogActions>
             </Dialog>
           </Grid>
+          <SchedulerCard room={room} />
+          {/* {console.log(room)} */}
         </Grid>
       ) : (
         <div className={classes.center}>
