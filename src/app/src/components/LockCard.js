@@ -40,7 +40,7 @@ const LockCard = ({ room }) => {
     var path = `/things?room_id=${room}&type=cabinet`;
     await axios.get(path, head).then((res) => {
       setCabinet(res.data.result.things);
-      console.log(cabinet);
+      // console.log(cabinet);
     });
     setLoading(true);
   };

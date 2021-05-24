@@ -18,9 +18,6 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
     height: "90%",
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
   },
   BulbIcon: {
     fontSize: "7rem",
@@ -72,7 +69,7 @@ const LightCard = ({ room }) => {
     let id = event.target.name;
   };
   useDidMountEffect(() => {
-    // console.log(things[Object.keys(things)[0]].sensors.desired.state);
+    console.log(things[Object.keys(things)[0]].sensors.desired.state);
     axios
       .post(
         `/control?thing_id=${Object.keys(things)[0]}`,
@@ -84,7 +81,6 @@ const LightCard = ({ room }) => {
       });
   }, [things]);
 
-  console.log(things);
   const lights_keys = things[Object.keys(things)[0]];
   // if (loading) {
   //   const lights_keys.sensors.desired.state.length = lights_keys.sensors.desired.state.length;
@@ -94,6 +90,9 @@ const LightCard = ({ room }) => {
     <>
       {loading ? (
         <Paper className={classes.first}>
+          <br />
+          <br />
+          <br />
           <Grid item xs={12}>
             <Grid item xs container direction="row">
               <Grid item xs={6}>
