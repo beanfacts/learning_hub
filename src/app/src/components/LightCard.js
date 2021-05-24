@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
     height: "90%",
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
   },
   BulbIcon: {
     fontSize: "7rem",
@@ -32,23 +35,32 @@ const useStyles = makeStyles((theme) => ({
 const LightCard = ({ room }) => {
   const [things, setThings] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [lightexist, setLightexist] = useState(false);
   // const [sensors, setSensors] = useState({"state":[]});
 
-  const lights = async () => {
+  const getlights = async () => {
     try {
       var path = `/things?room_id=${room}&type=light`;
       await axios.get(path, head).then((res) => {
         setThings(res.data.result.things);
         // setSensors(things[Object.keys(things)[0]].sensors.desired.state);
-        console.log(things);
+        console.log(res.data.result.things);
+        if (Object.keys(res.data.result.things).length === 0) {
+          setLightexist(false);
+        } else {
+          setLightexist(true);
+        }
       });
       setLoading(true);
     } catch (e) {
       console.log(e);
     }
+    // if (things[Object.keys(things)[0]] === undefined) {
+    //   setLightexist(false);
+    // }
   };
   useEffect(() => {
-    lights();
+    getlights();
   }, []);
 
   const handleChange = (val) => (event) => {
@@ -69,16 +81,18 @@ const LightCard = ({ room }) => {
     let id = event.target.name;
   };
   useDidMountEffect(() => {
-    console.log(things[Object.keys(things)[0]].sensors.desired.state);
-    axios
-      .post(
-        `/control?thing_id=${Object.keys(things)[0]}`,
-        things[Object.keys(things)[0]].sensors.desired,
-        head
-      )
-      .then(() => (error) => {
-        console.log(error);
-      });
+    if (lightexist) {
+      console.log(things[Object.keys(things)[0]].sensors.desired.state);
+      axios
+        .post(
+          `/control?thing_id=${Object.keys(things)[0]}`,
+          things[Object.keys(things)[0]].sensors.desired,
+          head
+        )
+        .then(() => (error) => {
+          console.log(error);
+        });
+    }
   }, [things]);
 
   const lights_keys = things[Object.keys(things)[0]];
@@ -88,7 +102,7 @@ const LightCard = ({ room }) => {
   const classes = useStyles();
   return (
     <>
-      {loading ? (
+      {loading && lightexist ? (
         <Paper className={classes.first}>
           <br />
           <br />

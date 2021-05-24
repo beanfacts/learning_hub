@@ -35,12 +35,18 @@ const LockCard = ({ room }) => {
   const classes = useStyles();
   const [cabinet, setCabinet] = useState({});
   const [loading, setLoading] = useState(false);
+  const [cabinetexist, setCabinetexist] = useState(false);
 
   const lights = async () => {
     var path = `/things?room_id=${room}&type=cabinet`;
     await axios.get(path, head).then((res) => {
       setCabinet(res.data.result.things);
       // console.log(cabinet);
+      if (Object.keys(res.data.result.things).length === 0) {
+        setCabinetexist(false);
+      } else {
+        setCabinetexist(true);
+      }
     });
     setLoading(true);
   };
@@ -78,7 +84,7 @@ const LockCard = ({ room }) => {
   };
   return (
     <>
-      {loading ? (
+      {loading && cabinetexist ? (
         <Paper className={classes.first}>
           {cabinet[Object.keys(cabinet)].sensors.desired.state === "locked" ? (
             <div>
