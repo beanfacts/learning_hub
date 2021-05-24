@@ -151,7 +151,7 @@ function Navigation() {
   };
 
   const protectComponent = () => {
-    if (window.location.pathname !== "/signin") {
+    if (window.location.pathname === "/schedule") {
       return (
         <Grid item>
           <IconButton
