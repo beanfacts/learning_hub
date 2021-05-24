@@ -14,6 +14,7 @@ import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import axios from "../axios";
+import { Email } from "@material-ui/icons";
 
 function Copyright() {
   return (
@@ -60,11 +61,13 @@ export default function SignUp() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [emailformat, setEmailformat] = useState(false);
   const [userName, setUserName] = useState("");
   const [passWord, setPassWord] = useState("");
   const [ConpassWord, setConPassWord] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const [checkerrors, setCheckErrors] = useState("");
+  const [checkerrorsemail, setCheckErrorsemail] = useState("");
   const [showError, setshowError] = useState(false);
   const nextStep = () => {
     if (
@@ -101,6 +104,24 @@ export default function SignUp() {
       setCheckErrors("miss match");
     }
   };
+  const validemail = () => {
+    // console.log(email);
+    const reg = /$|.+@kmitl\.ac\.th+/;
+    if (email === "") {
+      return;
+    }
+    if (/.+@kmitl\.ac\.th+/.test(email)) {
+      setEmailformat(false);
+      setCheckErrorsemail("");
+    } else {
+      setEmailformat(true);
+      setCheckErrorsemail("Please enter valid email 'example.ex@kmitl.ac.th'");
+    }
+    console.log(reg.test(email));
+  };
+  useEffect(() => {
+    validemail();
+  }, [email, emailformat]);
   useEffect(() => {
     checkpass();
   }, [ConpassWord, passWord]);
@@ -161,7 +182,12 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  onChange={(e) => setEmail(e.target.value)}
+                  error={emailformat}
+                  helperText={checkerrorsemail}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    validemail();
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
