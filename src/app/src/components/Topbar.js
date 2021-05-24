@@ -16,7 +16,7 @@ import {
   Grid,
 } from "@material-ui/core";
 import { AcCard } from "./AcCard";
-import { VdoCard } from "./VdoCard";
+import { LockCard } from "./LockCard";
 import { LightCard } from "./LightCard";
 import CloseIcon from "@material-ui/icons/Close";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -300,19 +300,15 @@ const Topbar = () => {
               </DialogTitle>
               <DialogContent dividers>
                 <Grid item xs={12} container direction="row">
-                  {/* <Grid item xs={2}></Grid> */}
                   <Grid item xs={4}>
-                    <VdoCard />
+                    <LockCard room={room} />
                   </Grid>
                   <Grid item xs={4}>
                     <LightCard room={room} />
-                    {/* TODO change the "hm_602" to dynamic value (the value that you stored) */}
                   </Grid>
                   <Grid item xs={4}>
                     <AcCard room={room} />
-                    {/* {console.log("AIRROOM", room)} */}
                   </Grid>
-                  {/* <Grid item xs={2}></Grid> */}
                 </Grid>
               </DialogContent>
               <DialogActions>

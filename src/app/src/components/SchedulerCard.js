@@ -80,7 +80,7 @@ const SchedulerCard = ({ room }) => {
 
   useEffect(() => {
     getSchedule();
-  }, [room, loading, schedule]); //I don't know why but it works!!!
+  }, [room]); //I don't know why but it works!!!
   const result = schedule.map((apmnt) => ({
     course_id: apmnt.course_id,
     id: apmnt.reservation_id,
@@ -131,8 +131,9 @@ const SchedulerCard = ({ room }) => {
     ({ added, changed, deleted }) => {
       if (added) {
         const r = Math.random().toString(36).substring(7);
-        const startingAddedId = data.length > 0 ? r : 0;
+        const startingAddedId = r;
         const temp = { id: startingAddedId, ...added };
+        console.log(temp);
 
         const reply = {
           course_id: temp.course_id,
@@ -146,7 +147,11 @@ const SchedulerCard = ({ room }) => {
         axios
           .post(`/schedule`, reply, head)
           .then((response) => {
-            setData([...data, { id: startingAddedId, ...added }]);
+            console.log(response.data.result.reservation_id);
+            setData([
+              ...data,
+              { id: response.data.result.reservation_id, ...added },
+            ]);
           })
           .catch((err) => {
             console.log(err);
@@ -177,6 +182,7 @@ const SchedulerCard = ({ room }) => {
                       : appointment
                   )
                 );
+                console.log(reply);
               })
               .catch((err) => {
                 setOpen(true);
