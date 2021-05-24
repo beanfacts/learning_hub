@@ -13,6 +13,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import { set } from 'react-hook-form';
 
 
 
@@ -80,6 +82,7 @@ export default function SignUp() {
   const [ConpassWord, setConPassWord] = useState('');
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0)
+  const [errors,setErrors] = useState('error')
   const  nextStep= () =>{
     if (activeStep < 3 && 
       firstName && lastName && email && userName && passWord === ConpassWord
@@ -87,15 +90,26 @@ export default function SignUp() {
       ){
       setActiveStep((currentStep) => currentStep +1) //increasing the step
     }
-    if (ConpassWord !== passWord){
-      alert('your password is not match')
-    }
+    // if (ConpassWord !== passWord){
+    //   He
+    // }
 
    
   }
   // console.log({firstName})
-  
+ const checkpass = () => {
+   console.log(passWord,ConpassWord)
+  if (ConpassWord === passWord){
+    console.log('equal')
 
+  }
+  else {
+    setErrors('blaaaaa')
+  }
+   
+ }
+
+ checkpass()
 
   return (
     <Container component="main" maxWidth="xs">
@@ -193,6 +207,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
               <TextField
+                error
                 variant="outlined"
                 required
                 fullWidth
@@ -201,7 +216,11 @@ export default function SignUp() {
                 label="Confirm Password"
                 name="Conpass"
                 autoComplete="Conpass"
-                onChange={e => setConPassWord(e.target.value)}
+                error= {Boolean(errors)}
+                helperText="password mismatch"
+                onChange={e => {
+                  setConPassWord(e.target.value)
+                }}
               />
             </Grid>
             <Button
