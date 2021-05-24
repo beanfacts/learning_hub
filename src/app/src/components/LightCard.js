@@ -18,9 +18,6 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
     height: "90%",
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
   },
   BulbIcon: {
     fontSize: "7rem",
@@ -42,7 +39,7 @@ const LightCard = ({ room }) => {
       var path = `/things?room_id=${room}&type=light`;
       await axios.get(path, head).then((res) => {
         setThings(res.data.result.things);
-        // setSensors(things[Object.keys(things)[1]].sensors.desired.state);
+        // setSensors(things[Object.keys(things)[0]].sensors.desired.state);
         console.log(things);
       });
       setLoading(true);
@@ -55,7 +52,7 @@ const LightCard = ({ room }) => {
   }, []);
 
   const handleChange = (val) => (event) => {
-    var temp = things[Object.keys(things)[1]].sensors.desired.state;
+    var temp = things[Object.keys(things)[0]].sensors.desired.state;
     temp[val] = event.target.checked;
     setThings({
       ...things,
@@ -72,11 +69,11 @@ const LightCard = ({ room }) => {
     let id = event.target.name;
   };
   useDidMountEffect(() => {
-    // console.log(things[Object.keys(things)[1]].sensors.desired.state);
+    console.log(things[Object.keys(things)[0]].sensors.desired.state);
     axios
       .post(
-        `/control?thing_id=${Object.keys(things)[1]}`,
-        things[Object.keys(things)[1]].sensors.desired,
+        `/control?thing_id=${Object.keys(things)[0]}`,
+        things[Object.keys(things)[0]].sensors.desired,
         head
       )
       .then(() => (error) => {
@@ -84,8 +81,7 @@ const LightCard = ({ room }) => {
       });
   }, [things]);
 
-  console.log(things);
-  const lights_keys = things[Object.keys(things)[1]];
+  const lights_keys = things[Object.keys(things)[0]];
   // if (loading) {
   //   const lights_keys.sensors.desired.state.length = lights_keys.sensors.desired.state.length;
   // }
@@ -94,6 +90,9 @@ const LightCard = ({ room }) => {
     <>
       {loading ? (
         <Paper className={classes.first}>
+          <br />
+          <br />
+          <br />
           <Grid item xs={12}>
             <Grid item xs container direction="row">
               <Grid item xs={6}>
@@ -124,7 +123,7 @@ const LightCard = ({ room }) => {
                   }
                   onChange={handleChange(0)}
                   color="primary"
-                  name={Object.keys(things)[1]}
+                  name={Object.keys(things)[0]}
                   inputProps={{
                     "aria-label": "primary checkbox",
                   }}
@@ -142,7 +141,7 @@ const LightCard = ({ room }) => {
                   }
                   onChange={handleChange(1)}
                   color="primary"
-                  name={Object.keys(things)[1]}
+                  name={Object.keys(things)[0]}
                   inputProps={{
                     "aria-label": "primary checkbox",
                   }}
@@ -178,7 +177,7 @@ const LightCard = ({ room }) => {
                   }
                   onChange={handleChange(2)}
                   color="primary"
-                  name={Object.keys(things)[1]}
+                  name={Object.keys(things)[0]}
                   inputProps={{
                     "aria-label": "primary checkbox",
                   }}
@@ -196,7 +195,7 @@ const LightCard = ({ room }) => {
                   }
                   onChange={handleChange(3)}
                   color="primary"
-                  name={Object.keys(things)[1]}
+                  name={Object.keys(things)[0]}
                   inputProps={{
                     "aria-label": "primary checkbox",
                   }}
