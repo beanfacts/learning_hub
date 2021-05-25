@@ -1,7 +1,6 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import { Topbar } from "../components/Topbar";
-import { SchedulerCard } from "../components/SchedulerCard";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,7 +18,7 @@ function Schedule() {
       <div className="App-header">
         <Grid container spacing={2} className={classes.parentPaper}>
           <Topbar />
-          <SchedulerCard />
+          {/* <SchedulerCard /> */}
         </Grid>
       </div>
       {/* <div className="App-header"></div> */}

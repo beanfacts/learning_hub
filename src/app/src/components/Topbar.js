@@ -16,13 +16,14 @@ import {
   Grid,
 } from "@material-ui/core";
 import { AcCard } from "./AcCard";
-import { VdoCard } from "./VdoCard";
+import { LockCard } from "./LockCard";
 import { LightCard } from "./LightCard";
 import CloseIcon from "@material-ui/icons/Close";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { SchedulerCard } from "../components/SchedulerCard";
 import Remote from "@material-ui/icons/SettingsRemoteRounded";
 
 const head = {
@@ -141,7 +142,7 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 const Topbar = () => {
-  const [room, setRoom] = useState(["None"]);
+  const [room, setRoom] = useState("");
   const [roomName, setRoomName] = useState(["None"]);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -187,7 +188,7 @@ const Topbar = () => {
         // console.log(response);
       },
       (error) => {
-        console.log(error);
+        console.log("ERROR RES", error);
       }
     );
   }, []);
@@ -199,16 +200,8 @@ const Topbar = () => {
   */
   const room_n = hm.map((k) => k.room_name);
   const room_i = hm.map((k) => k.room_id);
-
-  // console.log("name", room_n);
-  // console.log("id", room_i);
-
   const zip = (a, b) => a.map((k, i) => [k, b[i]]);
   const room_tup = zip(room_i, room_n);
-  // console.log(room_tup);
-
-  let key = [];
-  let val = [];
 
   newRoom = room_tup.map((value, index) => {
     // console.log(value)
@@ -218,6 +211,12 @@ const Topbar = () => {
       </MenuItem>
     );
   });
+  const protectComponent = () => {
+    return <SchedulerCard room={room} />;
+  };
+  useEffect(() => {
+    protectComponent();
+  }, [room]);
   // console.log(newRoom)
   return (
     <>
@@ -301,18 +300,15 @@ const Topbar = () => {
               </DialogTitle>
               <DialogContent dividers>
                 <Grid item xs={12} container direction="row">
-                  {/* <Grid item xs={2}></Grid> */}
                   <Grid item xs={4}>
-                    <VdoCard />
+                    <LockCard room={room} />
                   </Grid>
                   <Grid item xs={4}>
                     <LightCard room={room} />
-                    {/* TODO change the "hm_602" to dynamic value (the value that you stored) */}
                   </Grid>
                   <Grid item xs={4}>
                     <AcCard room={room} />
                   </Grid>
-                  {/* <Grid item xs={2}></Grid> */}
                 </Grid>
               </DialogContent>
               <DialogActions>
@@ -322,6 +318,8 @@ const Topbar = () => {
               </DialogActions>
             </Dialog>
           </Grid>
+          <SchedulerCard room={room} />
+          {/* {console.log(room)} */}
         </Grid>
       ) : (
         <div className={classes.center}>

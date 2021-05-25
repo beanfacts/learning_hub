@@ -1,11 +1,35 @@
 import React, { useCallback, useEffect, useState, memo } from "react";
-import CircularProgress from "@material-ui/core/CircularProgress";
+// import CircularProgress from "@material-ui/core/CircularProgress";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+// import DialogTitle from "@material-ui/core/DialogTitle";
+// import Dialog from "@material-ui/core/Dialog";
 import MuiAlert from "@material-ui/lab/Alert";
-import Paper from "@material-ui/core/Paper";
-import { makeStyles } from "@material-ui/core/styles";
-import Snackbar from "@material-ui/core/Snackbar";
+// import Paper from "@material-ui/core/Paper";
+// import Snackbar from "@material-ui/core/Snackbar";
 import axios from "../axios";
 import moment from "moment";
+import CloseIcon from "@material-ui/icons/Close";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import MuiDialogContent from "@material-ui/core/DialogContent";
+import MuiDialogActions from "@material-ui/core/DialogActions";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+// import IconButton from "@material-ui/core/IconButton";
+import {
+  Button,
+  Typography,
+  // Grid,
+  CircularProgress,
+  InputLabel,
+  Paper,
+  Snackbar,
+  Dialog,
+  MenuItem,
+  FormHelperText,
+  FormControl,
+  IconButton,
+  Select,
+} from "@material-ui/core";
 
 import {
   ViewState,
@@ -21,8 +45,11 @@ import {
   DragDropProvider,
   TodayButton,
   Toolbar,
-  Resources,
+  DayView,
   DateNavigator,
+  CurrentTimeIndicator,
+  ViewSwitcher,
+  Resources,
 } from "@devexpress/dx-react-scheduler-material-ui";
 import { courses, appointments } from "../components/data/tasks";
 
@@ -37,6 +64,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     height: "90%",
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 180,
+  },
   BulbIcon: {
     fontSize: "7rem",
     color: "#b2b2b2",
@@ -47,35 +78,99 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: "absolute",
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
 const head = {
   headers: { sessid: sessionStorage.getItem("sessid") },
 };
 
 const SchedulerCard = ({ room }) => {
-  room = "hm_601";
   const currentDate1 = moment();
   const [schedule, setSchedule] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [roomExist, setRoomExist] = useState(false);
+
+  const [lights, setLights] = useState([]);
+  const [lightexist, setLightexist] = useState(false);
+
+  const [acdata, setAcdata] = useState({});
+  const [acexist, setAcexist] = useState(false);
+
+  const [datafmt, setDatafmt] = useState({});
+  const [dataraw, setDataraw] = useState({});
+
+  const [action, setAction] = useState({
+    onac: false,
+    onlight: false,
+  });
+  // const [onac, setOnac] = useState(false);
+  // const [onlight, setOnlight] = useState(false);
 
   /* getting the data from api */
   const getSchedule = async () => {
     try {
       const datePast = moment().subtract(7, "d").unix();
       const dateFuture = moment().add(7, "d").unix();
-      // console.log(dateFuture, datePast);
       var path = `/schedule?room_id=${room}&start_time=${datePast}&end_time=${dateFuture}`;
       await axios.get(path, head).then((res) => {
         setSchedule(res.data.result);
-        console.log(res.data.result);
       });
       setLoading(true);
     } catch (e) {
       console.log(e);
     }
   };
+
+  const getlights = async () => {
+    try {
+      var path = `/things?room_id=${room}&type=light`;
+      await axios.get(path, head).then((res) => {
+        setLights(res.data.result.things);
+        console.log(res.data.result.things);
+        if (Object.keys(res.data.result.things).length === 0) {
+          setLightexist(false);
+        } else {
+          setLightexist(true);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getaircond = async () => {
+    try {
+      var path = `/things?room_id=${room}&type=ac`;
+      const res = await axios.get(path, head).then((res) => {
+        setAcdata(res.data.result.things);
+        if (Object.keys(res.data.result.things).length === 0) {
+          setAcexist(false);
+        } else {
+          setAcexist(true);
+        }
+      });
+      setLoading(true);
+    } catch (e) {
+      console.log(e.result);
+    }
+  };
+
   useEffect(() => {
     getSchedule();
-  }, []);
+    getlights();
+    getaircond();
+  }, [room]);
 
   const result = schedule.map((apmnt) => ({
     course_id: apmnt.course_id,
@@ -90,12 +185,22 @@ const SchedulerCard = ({ room }) => {
 
   const [data, setData] = useState([]);
 
+  const handleChange = (event) => {
+    setTime(event.target.value);
+  };
+
+  const handlecheckbox = (event) => {
+    setAction({ ...action, [event.target.name]: event.target.checked });
+  };
   useEffect(() => {
     setData(result);
-  }, [loading]);
+  }, [schedule]);
+
   const [teacher, setTeacher] = useState(true);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(true);
   const [currentDate, setCurrentDate] = useState(currentDate1);
+  const [time, setTime] = useState("");
   const [editingOptions, setEditingOptions] = useState({
     allowAdding: teacher,
     allowDeleting: teacher,
@@ -123,12 +228,47 @@ const SchedulerCard = ({ room }) => {
     allowDragging,
   } = editingOptions;
 
+  const scheduleaction = () => {};
+
+  const DialogTitle = withStyles(styles)((props) => {
+    const { children, classes, onClose, ...other } = props;
+    return (
+      <MuiDialogTitle disableTypography className={classes.root} {...other}>
+        <Typography variant="h5">{children}</Typography>
+        {onClose ? (
+          <IconButton
+            aria-label="close"
+            className={classes.closeButton}
+            onClick={onClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        ) : null}
+      </MuiDialogTitle>
+    );
+  });
+
+  const DialogContent = withStyles((theme) => ({
+    root: {
+      padding: theme.spacing(10),
+      // backgroundColor: 'skyblue',
+    },
+  }))(MuiDialogContent);
+
+  const DialogActions = withStyles((theme) => ({
+    root: {
+      margin: 0,
+      padding: theme.spacing(1),
+    },
+  }))(MuiDialogActions);
+
   const onCommitChanges = useCallback(
     ({ added, changed, deleted }) => {
       if (added) {
         const r = Math.random().toString(36).substring(7);
-        const startingAddedId = data.length > 0 ? r : 0;
+        const startingAddedId = r;
         const temp = { id: startingAddedId, ...added };
+        console.log(temp);
 
         const reply = {
           course_id: temp.course_id,
@@ -138,11 +278,23 @@ const SchedulerCard = ({ room }) => {
           description: temp.notes,
           room_id: room,
           title: temp.title,
+          actions: [],
         };
+
+        // setDatafmt(reply);
+        // setDataraw([
+        //   ...data,
+        //   { id: response.data.result.reservation_id, ...added },
+        // ])
         axios
           .post(`/schedule`, reply, head)
           .then((response) => {
-            setData([...data, { id: startingAddedId, ...added }]);
+            console.log(response.data.result.reservation_id);
+            setData([
+              ...data,
+              { id: response.data.result.reservation_id, ...added },
+            ]);
+            scheduleaction();
           })
           .catch((err) => {
             console.log(err);
@@ -173,6 +325,7 @@ const SchedulerCard = ({ room }) => {
                       : appointment
                   )
                 );
+                console.log(reply);
               })
               .catch((err) => {
                 setOpen(true);
@@ -200,8 +353,6 @@ const SchedulerCard = ({ room }) => {
         console.log(reply);
       }
       setIsAppointmentBeingCreated(false);
-
-      // console.log(reply);
     },
     [setData, setIsAppointmentBeingCreated, data]
   );
@@ -213,11 +364,14 @@ const SchedulerCard = ({ room }) => {
     setOpen(false);
   };
 
+  const handleClose1 = (event, reason) => {
+    setOpen1(false);
+  };
+
   const onAddedAppointmentChange = useCallback((appointment) => {
     setAddedAppointment(appointment);
     setIsAppointmentBeingCreated(true);
   });
-  // console.log(data);
 
   const TimeTableCell = useCallback(
     memo(({ onDoubleClick, ...restProps }) => (
@@ -261,13 +415,17 @@ const SchedulerCard = ({ room }) => {
         <React.Fragment>
           <Paper>
             <Scheduler data={data} height={"auto"}>
-              <ViewState defaultCurrentDate={currentDate} />
+              <ViewState
+                defaultCurrentDate={currentDate}
+                defaultCurrentViewName="Week"
+              />
               <EditingState
                 onCommitChanges={onCommitChanges}
                 addedAppointment={addedAppointment}
                 onAddedAppointmentChange={onAddedAppointmentChange}
               />
               <IntegratedEditing />
+              <DayView startDayHour={9} endDayHour={18} />
               <WeekView
                 startDayHour={9}
                 endDayHour={19}
@@ -277,7 +435,7 @@ const SchedulerCard = ({ room }) => {
               <DateNavigator />
               <TodayButton />
               <Appointments />
-              {/* <Resources data={resources} mainResourceName="course_id" /> */}
+              <Resources data={resources} mainResourceName="course_id" />
               <AppointmentTooltip
                 showOpenButton
                 showDeleteButton={allowDeleting}
@@ -290,6 +448,8 @@ const SchedulerCard = ({ room }) => {
                 allowDrag={allowDrag}
                 allowResize={allowResize}
               />
+              <ViewSwitcher />
+              <CurrentTimeIndicator />
             </Scheduler>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
               <Alert onClose={handleClose} severity="error">
@@ -297,6 +457,69 @@ const SchedulerCard = ({ room }) => {
               </Alert>
             </Snackbar>
           </Paper>
+          <Dialog
+            disableBackdropClick
+            disableEscapeKeyDown
+            open={open1}
+            onClose={handleClose}
+          >
+            <DialogTitle>Schedule Actions</DialogTitle>
+            <DialogContent dividers>
+              <FormControl className={classes.formControl}>
+                <InputLabel id="select time">Before Class</InputLabel>
+                <Select
+                  labelId="select time"
+                  id="demo-simple-select"
+                  value={time}
+                  onChange={handleChange}
+                >
+                  <MenuItem value={5}>5 minutes</MenuItem>
+                  <MenuItem value={10}>10 minutes</MenuItem>
+                  <MenuItem value={15}>15 minutes</MenuItem>
+                </Select>
+              </FormControl>
+              {!acexist && (
+                <>
+                  <br />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={action.onac}
+                        onChange={handlecheckbox}
+                        name="onac"
+                        color="primary"
+                      />
+                    }
+                    label="Turn on AC"
+                  />
+                </>
+              )}
+              {!lightexist && (
+                <>
+                  <br />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={action.onlight}
+                        onChange={handlecheckbox}
+                        name="onlight"
+                        color="primary"
+                      />
+                    }
+                    label="Turn on Lights"
+                  />
+                </>
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose1} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleClose1} color="primary">
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
         </React.Fragment>
       ) : (
         <div className={classes.first}>
