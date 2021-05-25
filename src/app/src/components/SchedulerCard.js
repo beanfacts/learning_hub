@@ -13,13 +13,15 @@ import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
 // import IconButton from "@material-ui/core/IconButton";
 import {
   Button,
   Typography,
-  // Grid,
+  Slider,
   CircularProgress,
   InputLabel,
   Paper,
@@ -53,7 +55,7 @@ import {
   Resources,
 } from "@devexpress/dx-react-scheduler-material-ui";
 import { courses, appointments } from "../components/data/tasks";
-import { object } from "yup";
+// import { object } from "yup";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -69,6 +71,10 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 180,
+  },
+  ac: {
+    margin: theme.spacing(1),
+    minWidth: 80,
   },
   BulbIcon: {
     fontSize: "7rem",
@@ -201,10 +207,12 @@ const SchedulerCard = ({ room }) => {
 
   const [teacher, setTeacher] = useState(true);
   const [open, setOpen] = useState(false);
-  const [open1, setOpen1] = useState(true);
+  const [open1, setOpen1] = useState(false);
   const [currentDate, setCurrentDate] = useState(currentDate1);
-  const [time, setTime] = useState(null);
-  const [dummy, setDummy] = useState("");
+  const [time, setTime] = useState(0);
+  const [fan, setFan] = useState(0);
+  const [temp, setTemp] = useState(24);
+
   const [editingOptions, setEditingOptions] = useState({
     allowAdding: teacher,
     allowDeleting: teacher,
@@ -241,8 +249,8 @@ const SchedulerCard = ({ room }) => {
           thing_id: Object.keys(acdata)[0],
           action: {
             state: 1,
-            fan: 0,
-            temp: 25,
+            fan: fan,
+            temp: temp,
           },
         }
       : null;
@@ -262,14 +270,14 @@ const SchedulerCard = ({ room }) => {
     } else if (!action.onlight && action.onac) {
       tosend = [acthing];
     }
-    const temp = {
+    const val = {
       ...datafmt,
       reservation_id: dataid,
       actions: tosend,
     };
     if (action.onac || action.onlight) {
       axios
-        .patch(`/schedule`, temp, head)
+        .patch(`/schedule`, val, head)
         .then((response) => {
           setOpen1(false);
         })
@@ -279,17 +287,9 @@ const SchedulerCard = ({ room }) => {
     }
   };
 
-  const onHandleMinChange = (e) => {
-    // let mins = e.target.value;
-    // const regex = /^[0-9]+$/;
-    // if value is not blank, then test the regex
-    // if (mins === "" || regex.test(mins)) {
-    // if (!Number(e.target.value)) {
-    //   setDummy(e.target.value);
-    // } else {
-    //   setTime(e.target.value);
-    // }
-    setTime(e.target.value);
+  const handleFan = (event, newfan) => {
+    setFan(newfan);
+    console.log(fan);
   };
 
   const DialogTitle = withStyles(styles)((props) => {
@@ -429,6 +429,26 @@ const SchedulerCard = ({ room }) => {
   };
   // console.log(lights, acdata);
 
+  const marks = [
+    {
+      value: 16,
+      label: "16°C",
+    },
+    {
+      value: 20,
+      label: "20°C",
+    },
+    {
+      value: 25,
+      label: "25°C",
+    },
+  ];
+
+  const handleTempChange = (e, data) => {
+    setTemp(data);
+    console.log(temp, fan);
+  };
+
   const handleClose1 = (event, reason) => {
     setOpen1(false);
   };
@@ -532,41 +552,20 @@ const SchedulerCard = ({ room }) => {
               >
                 <DialogTitle>Schedule Actions</DialogTitle>
                 <DialogContent dividers>
-                  <TextField
-                    label="Verifiy Code"
-                    name="verif_code"
-                    inputProps={{
-                      maxlength: 6,
-                    }}
-                    onChange={(e) => setDummy(e.target.value)}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                  <TextField
-                    label="Verifiy Code"
-                    name="verif_code"
-                    inputProps={{
-                      maxlength: 6,
-                    }}
-                    onChange={(e) => setTime(e.target.value)}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                  {/* <FormControl className={classes.formControl}>
+                  <FormControl className={classes.formControl}>
                     <InputLabel id="select time">Before Class</InputLabel>
                     <Select
                       labelId="select time"
-                      id="demo-simple-select"
+                      id="select"
                       value={time}
                       onChange={handleChange}
-                      // defaultValue={}
                     >
+                      <MenuItem value={0}>0 minutes</MenuItem>
                       <MenuItem value={5 * 60 * -1}>5 minutes</MenuItem>
                       <MenuItem value={10 * 60 * -1}>10 minutes</MenuItem>
                       <MenuItem value={15 * 60 * -1}>15 minutes</MenuItem>
                     </Select>
-                  </FormControl> */}
-
+                  </FormControl>
                   {acexist && (
                     <>
                       <br />
@@ -583,6 +582,57 @@ const SchedulerCard = ({ room }) => {
                       />
                     </>
                   )}
+
+                  <div>
+                    <br />
+                    <ToggleButtonGroup
+                      value={fan}
+                      defaultValue={0}
+                      exclusive
+                      onChange={handleFan}
+                      aria-label="text alignment"
+                    >
+                      <ToggleButton
+                        value={1}
+                        disabled={!action.onac}
+                        aria-label="left aligned"
+                      >
+                        LOW
+                      </ToggleButton>
+                      <ToggleButton
+                        disabled={!action.onac}
+                        value={2}
+                        aria-label="centered"
+                      >
+                        MID
+                      </ToggleButton>
+                      <ToggleButton
+                        value={3}
+                        disabled={!action.onac}
+                        aria-label="right aligned"
+                      >
+                        HIGH
+                      </ToggleButton>
+                      <ToggleButton
+                        value={0}
+                        disabled={!action.onac}
+                        aria-label="justified"
+                      >
+                        AUTO
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+                    <Slider
+                      aria-labelledby="discrete-slider-always"
+                      step={1}
+                      marks={marks}
+                      valueLabelDisplay="auto"
+                      min={16}
+                      max={28}
+                      value={temp}
+                      onChange={handleTempChange}
+                      disabled={!action.onac}
+                    />
+                  </div>
                   {lightexist && (
                     <>
                       <br />
