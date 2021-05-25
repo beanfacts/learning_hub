@@ -183,7 +183,7 @@ export default function SignUp() {
             <StepLabel>Signup</StepLabel>
           </Step>
           <Step>
-            <StepLabel>Fingerprint</StepLabel>
+            <StepLabel>Confirm Email</StepLabel>
           </Step>
           <Step>
             <StepLabel>Complete</StepLabel>
@@ -319,7 +319,7 @@ export default function SignUp() {
                 className={classes.submit}
                 onClick={() => handlepin()}
               >
-                RegisterFinger
+                Verify
               </Button>
             </div>
           ) : (
