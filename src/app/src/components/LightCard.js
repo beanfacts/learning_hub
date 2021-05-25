@@ -119,7 +119,7 @@ const LightCard = ({ room }) => {
               </Grid>
               <Grid item xs={6}>
                 {lights_keys.sensors.desired.state.length > 1 &&
-                lights_keys.sensors.desired.state[0] ? (
+                lights_keys.sensors.desired.state[1] ? (
                   <BulbIcon className={classes.BulbIconLit} />
                 ) : (
                   <BulbIcon className={classes.BulbIcon} />
@@ -150,7 +150,7 @@ const LightCard = ({ room }) => {
                   }
                   checked={
                     lights_keys.sensors.desired.state.length > 1
-                      ? lights_keys.sensors.desired.state[0]
+                      ? lights_keys.sensors.desired.state[1]
                       : false
                   }
                   onChange={handleChange(1)}
