@@ -13,8 +13,15 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
 import axios from "../axios";
 import { Email } from "@material-ui/icons";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 function Copyright() {
   return (
@@ -58,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -69,6 +77,8 @@ export default function SignUp() {
   const [checkerrors, setCheckErrors] = useState("");
   const [checkerrorsemail, setCheckErrorsemail] = useState("");
   const [showError, setshowError] = useState(false);
+  const [verifypin, setVerifypin] = useState("");
+
   const nextStep = () => {
     if (
       activeStep < 3 &&
@@ -76,6 +86,7 @@ export default function SignUp() {
       lastName &&
       email &&
       userName &&
+      !emailformat &&
       passWord === ConpassWord
     ) {
       const body = {
@@ -86,15 +97,42 @@ export default function SignUp() {
         email: email,
       };
       axios
-        .post(`POST /signup`, body)
+        .post(`/signup`, body)
         .then(() => {
           setActiveStep((currentStep) => currentStep + 1);
         })
         .catch((err) => {
           console.log(err);
+          setOpen(true);
         });
+    } else {
+      setOpen(true);
     }
   };
+
+  const handlepin = () => {
+    const temp = {
+      username: userName,
+      verif_code: verifypin,
+    };
+    axios
+      .post(`/signup_verify?username=${userName}&verif_code=${verifypin}`)
+      .then(() => {
+        setActiveStep((currentStep) => currentStep + 1);
+      })
+      .catch((err) => {
+        console.log(err);
+        setOpen(true);
+      });
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
   const checkpass = () => {
     if (ConpassWord === passWord) {
       setshowError(false);
@@ -105,7 +143,6 @@ export default function SignUp() {
     }
   };
   const validemail = () => {
-    // console.log(email);
     const reg = /$|.+@kmitl\.ac\.th+/;
     if (email === "") {
       return;
@@ -129,6 +166,11 @@ export default function SignUp() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="error">
+          Please fill in valid information
+        </Alert>
+      </Snackbar>
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <AccountCircleIcon />
@@ -234,7 +276,7 @@ export default function SignUp() {
                 />
               </Grid>
               <Button
-                type="submit"
+                // type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
@@ -257,16 +299,25 @@ export default function SignUp() {
           {activeStep === 1 ? ( ///////////////register step
             <div>
               <Typography className={classes.instructions}>
-                please press the button
+                Verification code will be sent to your account in 30 seconds
               </Typography>
-
+              <TextField
+                label="Verifiy Code"
+                name="verif_code"
+                inputProps={{
+                  maxlength: 6,
+                }}
+                onChange={(e) => setVerifypin(e.target.value)}
+                margin="normal"
+                variant="outlined"
+              />
               <Button
-                type="submit"
+                // type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={() => nextStep()}
+                onClick={() => handlepin()}
               >
                 RegisterFinger
               </Button>
@@ -277,16 +328,17 @@ export default function SignUp() {
           {activeStep === 2 ? ( //////////////complete
             <div>
               <Typography className={classes.instructions}>
-                All steps are completed
+                🥳 All steps are completed 🎉
               </Typography>
 
               <Button
-                type="submit"
+                // type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={() => setActiveStep(0)}
+                href="/signin"
+                // onClick={() => setActiveStep(0)}
               >
                 DONE
               </Button>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import Navigation from "./components/Navigation";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -14,6 +14,9 @@ export default function AutoGrid() {
   // const [permit, setPermit] = useState(false);
   // if (sessionStorage.getItem("sessid")!==null){
   //   setPermit(true)
+  useEffect(() => {
+    document.title = "Smart Classroom";
+  }, []);
   return (
     <>
       <Router>

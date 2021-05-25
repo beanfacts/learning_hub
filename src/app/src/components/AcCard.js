@@ -37,6 +37,15 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: "90%",
   },
+  load: {
+    padding: theme.spacing(4),
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+    height: "90%",
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+  },
 }));
 
 const AcCard = ({ room }) => {
@@ -62,28 +71,31 @@ const AcCard = ({ room }) => {
   ];
 
   const [acdata, setAcdata] = useState({});
-  const [acexist, setAcexist] = useState(true);
+  const [acexist, setAcexist] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [mode, setMode] = useState("");
+
+  // const [checked, setChecked] = useState(false);
   const aircond = async () => {
     try {
       var path = `/things?room_id=${room}&type=ac`;
       const res = await axios.get(path, head).then((res) => {
         setAcdata(res.data.result.things);
-        // console.log("STATE", res.data.result.things);
-        // console.log("ACDATA", acdata[ac_name]);
+        if (Object.keys(res.data.result.things).length === 0) {
+          setAcexist(false);
+        } else {
+          setAcexist(true);
+        }
       });
       setLoading(true);
       // console.log(res.data);
-      if (acdata[Object.keys(acdata)[0]] === undefined) {
-        setAcexist(false);
-      }
     } catch (e) {
       console.log(e.result);
     }
   };
   // const key = Object.keys(acdata.things)[0];
   // console.log("KEY", key)
+  const ac_name = Object.keys(acdata)[0];
   useEffect(() => {
     aircond();
   }, []);
@@ -196,8 +208,7 @@ const AcCard = ({ room }) => {
         },
       },
     });
-    // console.log(event.target.value);
-    acdata[ac_name].sensors.mode = event.target.value;
+    acdata[ac_name].sensors.desired.mode = event.target.value;
     axios
       .post(
         `/control?thing_id=${ac_name}`,
@@ -245,11 +256,11 @@ const AcCard = ({ room }) => {
 
   // console.log(acdata);
   //Get the thing name (ac name eg.brightAc)
-  const ac_name = Object.keys(acdata)[0];
+  // const ac_name = Object.keys(acdata)[0];
   // console.log("AC", ac)
   return (
     <>
-      {loading ? (
+      {loading && acexist ? (
         <Paper className={classes.first}>
           <Grid item xs={12}>
             <h1 className={classes.fonts}>
@@ -368,7 +379,7 @@ const AcCard = ({ room }) => {
           </Grid>
         </Paper>
       ) : (
-        <div className={classes.first}>
+        <div className={classes.load}>
           <CircularProgress />
         </div>
       )}
