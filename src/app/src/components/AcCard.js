@@ -73,6 +73,8 @@ const AcCard = ({ room }) => {
   const [acdata, setAcdata] = useState({});
   const [acexist, setAcexist] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState("");
+
   // const [checked, setChecked] = useState(false);
   const aircond = async () => {
     try {
@@ -93,6 +95,7 @@ const AcCard = ({ room }) => {
   };
   // const key = Object.keys(acdata.things)[0];
   // console.log("KEY", key)
+  const ac_name = Object.keys(acdata)[0];
   useEffect(() => {
     aircond();
   }, []);
@@ -205,8 +208,7 @@ const AcCard = ({ room }) => {
         },
       },
     });
-    // console.log(event.target.value);
-    acdata[ac_name].sensors.mode = event.target.value;
+    acdata[ac_name].sensors.desired.mode = event.target.value;
     axios
       .post(
         `/control?thing_id=${ac_name}`,
@@ -254,7 +256,7 @@ const AcCard = ({ room }) => {
 
   // console.log(acdata);
   //Get the thing name (ac name eg.brightAc)
-  const ac_name = Object.keys(acdata)[0];
+  // const ac_name = Object.keys(acdata)[0];
   // console.log("AC", ac)
   return (
     <>
