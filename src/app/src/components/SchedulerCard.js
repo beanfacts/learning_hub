@@ -14,6 +14,7 @@ import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import TextField from "@material-ui/core/TextField";
 // import IconButton from "@material-ui/core/IconButton";
 import {
   Button,
@@ -52,6 +53,7 @@ import {
   Resources,
 } from "@devexpress/dx-react-scheduler-material-ui";
 import { courses, appointments } from "../components/data/tasks";
+import { object } from "yup";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -108,7 +110,7 @@ const SchedulerCard = ({ room }) => {
   const [acexist, setAcexist] = useState(false);
 
   const [datafmt, setDatafmt] = useState({});
-  const [dataraw, setDataraw] = useState({});
+  const [dataid, setDataid] = useState("");
 
   const [action, setAction] = useState({
     onac: false,
@@ -181,6 +183,7 @@ const SchedulerCard = ({ room }) => {
     notes: apmnt.description,
     room_id: apmnt.room_id,
     title: apmnt.title,
+    actions: apmnt.actions,
   }));
 
   const [data, setData] = useState([]);
@@ -200,7 +203,8 @@ const SchedulerCard = ({ room }) => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(true);
   const [currentDate, setCurrentDate] = useState(currentDate1);
-  const [time, setTime] = useState("");
+  const [time, setTime] = useState(null);
+  const [dummy, setDummy] = useState("");
   const [editingOptions, setEditingOptions] = useState({
     allowAdding: teacher,
     allowDeleting: teacher,
@@ -208,6 +212,7 @@ const SchedulerCard = ({ room }) => {
     allowDragging: teacher,
     allowResizing: teacher,
   });
+
   const [addedAppointment, setAddedAppointment] = useState({});
   const [isAppointmentBeingCreated, setIsAppointmentBeingCreated] =
     useState(false);
@@ -228,7 +233,64 @@ const SchedulerCard = ({ room }) => {
     allowDragging,
   } = editingOptions;
 
-  const scheduleaction = () => {};
+  const scheduleaction = () => {
+    let tosend = [];
+    const acthing = action.onac
+      ? {
+          delta: time,
+          thing_id: Object.keys(acdata)[0],
+          action: {
+            state: 1,
+            fan: 0,
+            temp: 25,
+          },
+        }
+      : null;
+    const lightthing = action.onlight
+      ? {
+          delta: time,
+          thing_id: Object.keys(lights)[0],
+          action: {
+            state: [true, true, true, true],
+          },
+        }
+      : null;
+    if (action.onlight && action.onac) {
+      tosend = [acthing, lightthing];
+    } else if (action.onlight && !action.onac) {
+      tosend = [lightthing];
+    } else if (!action.onlight && action.onac) {
+      tosend = [acthing];
+    }
+    const temp = {
+      ...datafmt,
+      reservation_id: dataid,
+      actions: tosend,
+    };
+    if (action.onac || action.onlight) {
+      axios
+        .patch(`/schedule`, temp, head)
+        .then((response) => {
+          setOpen1(false);
+        })
+        .catch((err) => {
+          setOpen(true);
+        });
+    }
+  };
+
+  const onHandleMinChange = (e) => {
+    // let mins = e.target.value;
+    // const regex = /^[0-9]+$/;
+    // if value is not blank, then test the regex
+    // if (mins === "" || regex.test(mins)) {
+    // if (!Number(e.target.value)) {
+    //   setDummy(e.target.value);
+    // } else {
+    //   setTime(e.target.value);
+    // }
+    setTime(e.target.value);
+  };
 
   const DialogTitle = withStyles(styles)((props) => {
     const { children, classes, onClose, ...other } = props;
@@ -251,7 +313,6 @@ const SchedulerCard = ({ room }) => {
   const DialogContent = withStyles((theme) => ({
     root: {
       padding: theme.spacing(10),
-      // backgroundColor: 'skyblue',
     },
   }))(MuiDialogContent);
 
@@ -278,10 +339,10 @@ const SchedulerCard = ({ room }) => {
           description: temp.notes,
           room_id: room,
           title: temp.title,
-          actions: [],
+          // actions: [],
         };
 
-        // setDatafmt(reply);
+        setDatafmt(reply);
         // setDataraw([
         //   ...data,
         //   { id: response.data.result.reservation_id, ...added },
@@ -294,7 +355,9 @@ const SchedulerCard = ({ room }) => {
               ...data,
               { id: response.data.result.reservation_id, ...added },
             ]);
-            scheduleaction();
+            // scheduleaction();
+            setDataid(response.data.result.reservation_id);
+            setOpen1(true);
           })
           .catch((err) => {
             console.log(err);
@@ -314,6 +377,7 @@ const SchedulerCard = ({ room }) => {
               description: temp.notes,
               room_id: room,
               title: temp.title,
+              // actions: temp.actions,
             };
             axios
               .patch(`/schedule`, reply, head)
@@ -363,6 +427,7 @@ const SchedulerCard = ({ room }) => {
     }
     setOpen(false);
   };
+  // console.log(lights, acdata);
 
   const handleClose1 = (event, reason) => {
     setOpen1(false);
@@ -457,69 +522,95 @@ const SchedulerCard = ({ room }) => {
               </Alert>
             </Snackbar>
           </Paper>
-          <Dialog
-            disableBackdropClick
-            disableEscapeKeyDown
-            open={open1}
-            onClose={handleClose}
-          >
-            <DialogTitle>Schedule Actions</DialogTitle>
-            <DialogContent dividers>
-              <FormControl className={classes.formControl}>
-                <InputLabel id="select time">Before Class</InputLabel>
-                <Select
-                  labelId="select time"
-                  id="demo-simple-select"
-                  value={time}
-                  onChange={handleChange}
-                >
-                  <MenuItem value={5}>5 minutes</MenuItem>
-                  <MenuItem value={10}>10 minutes</MenuItem>
-                  <MenuItem value={15}>15 minutes</MenuItem>
-                </Select>
-              </FormControl>
-              {!acexist && (
-                <>
-                  <br />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={action.onac}
-                        onChange={handlecheckbox}
-                        name="onac"
-                        color="primary"
-                      />
-                    }
-                    label="Turn on AC"
+          {(acexist || lightexist) && (
+            <div>
+              <Dialog
+                disableBackdropClick
+                disableEscapeKeyDown
+                open={open1}
+                onClose={handleClose}
+              >
+                <DialogTitle>Schedule Actions</DialogTitle>
+                <DialogContent dividers>
+                  <TextField
+                    label="Verifiy Code"
+                    name="verif_code"
+                    inputProps={{
+                      maxlength: 6,
+                    }}
+                    onChange={(e) => setDummy(e.target.value)}
+                    margin="normal"
+                    variant="outlined"
                   />
-                </>
-              )}
-              {!lightexist && (
-                <>
-                  <br />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={action.onlight}
-                        onChange={handlecheckbox}
-                        name="onlight"
-                        color="primary"
-                      />
-                    }
-                    label="Turn on Lights"
+                  <TextField
+                    label="Verifiy Code"
+                    name="verif_code"
+                    inputProps={{
+                      maxlength: 6,
+                    }}
+                    onChange={(e) => setTime(e.target.value)}
+                    margin="normal"
+                    variant="outlined"
                   />
-                </>
-              )}
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose1} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleClose1} color="primary">
-                Cancel
-              </Button>
-            </DialogActions>
-          </Dialog>
+                  {/* <FormControl className={classes.formControl}>
+                    <InputLabel id="select time">Before Class</InputLabel>
+                    <Select
+                      labelId="select time"
+                      id="demo-simple-select"
+                      value={time}
+                      onChange={handleChange}
+                      // defaultValue={}
+                    >
+                      <MenuItem value={5 * 60 * -1}>5 minutes</MenuItem>
+                      <MenuItem value={10 * 60 * -1}>10 minutes</MenuItem>
+                      <MenuItem value={15 * 60 * -1}>15 minutes</MenuItem>
+                    </Select>
+                  </FormControl> */}
+
+                  {acexist && (
+                    <>
+                      <br />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={action.onac}
+                            onChange={handlecheckbox}
+                            name="onac"
+                            color="primary"
+                          />
+                        }
+                        label="Turn on AC"
+                      />
+                    </>
+                  )}
+                  {lightexist && (
+                    <>
+                      <br />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={action.onlight}
+                            onChange={handlecheckbox}
+                            name="onlight"
+                            color="primary"
+                          />
+                        }
+                        label="Turn on Lights"
+                      />
+                    </>
+                  )}
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose1} color="primary">
+                    Cancel
+                  </Button>
+                  <Button onClick={scheduleaction} color="primary">
+                    Set
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
+          )}
         </React.Fragment>
       ) : (
         <div className={classes.first}>
