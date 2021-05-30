@@ -1,6 +1,6 @@
 """
 SPDX-License-Identifer: MIT
-Learning Hub Backend - Step Functions Stage 1
+Learning Hub Backend - Step Functions Stage 2
 Copyright (C) 2021 Tim Dettmar
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
