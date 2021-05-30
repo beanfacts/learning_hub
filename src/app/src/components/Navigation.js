@@ -168,7 +168,7 @@ function Navigation() {
             open={open}
             onClose={handleClose}
           >
-            <DialogTitle>Test Logout Dialog</DialogTitle>
+            <DialogTitle>Logging out</DialogTitle>
             <DialogContent dividers>
               <form className={classes.container}>
                 <div>
